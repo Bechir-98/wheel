@@ -18,7 +18,7 @@ function VendorPage() {
 
   return (
     <div className="form">
-      <h1>Vendor Information</h1>
+      
       <form onSubmit={handleSubmit}>
         <label>Business Name:</label>
         <input

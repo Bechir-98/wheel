@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import chair from './assets/chair.svg';
-import patient from './assets/patient.svg';
-import clinician from './assets/clinician.svg';
-import vendor from './assets/vendor.svg';
-import ff from './assets/fpng.png';
+import chair from '../assets/chair.svg';
+import patient from '../assets/patient.svg';
+import clinician from '../assets/clinician.svg';
+import vendor from '../assets/vendor.svg';
+import ff from '../assets/fpng.png';
 import Button from '@mui/material/Button';
 import { Box } from '@mui/material';
 import ReactCardFlip from 'react-card-flip';

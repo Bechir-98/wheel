@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ArrowButton from  './bouton_f.jsx';
+import ArrowButton from  '../componenets/bouton_f.jsx';
 
 
 function WcPage() {

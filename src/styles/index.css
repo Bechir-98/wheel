@@ -644,177 +644,79 @@ a:hover {
 .log-form a:hover {
   text-decoration: underline;
 }
-/* Patient Form Styles */
-.patient-form {
+/* Shared Wrapper Styles */
+.form-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f4f4f4;
+  background-color: #f0f2f5;
+  padding: 1rem;
 }
 
-.patient-form .formm {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Common Form Styles */
+.formm {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 600px;
+  box-sizing: border-box;
 }
 
-.patient-form h2 {
+.formm h2 {
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #333;
 }
 
-.patient-form label {
+/* Inputs & Selects */
+.formm label {
+  font-weight: 600;
   margin-bottom: 8px;
-  font-weight: bold;
+  display: block;
+  color: #444;
 }
 
-.patient-form input, .patient-form select {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+.formm input,
+.formm select {
   width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
-.patient-form input:focus, .patient-form select:focus {
+.formm input:focus,
+.formm select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
   outline: none;
-  border-color: #007BFF;
 }
 
-.patient-form button {
-  padding: 12px;
+/* Buttons */
+.formm button {
+  width: 100%;
+  padding: 14px;
   font-size: 16px;
   color: #fff;
-  background-color: #007BFF;
+  background-color: #007bff;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
   transition: background-color 0.3s ease;
-  width: 100%;
 }
 
-.patient-form button:hover {
+.formm button:hover {
   background-color: #0056b3;
 }
-/* Clinician Form Styles */
-.clinician-form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f4f4f4;
-}
 
-.clinician-form .formm {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-}
 
-.clinician-form h2 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
 
-.clinician-form label {
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.clinician-form input, .clinician-form select {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 100%;
-}
-
-.clinician-form input:focus, .clinician-form select:focus {
-  outline: none;
-  border-color: #007BFF;
-}
-
-.clinician-form button {
-  padding: 12px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007BFF;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-}
-
-.clinician-form button:hover {
-  background-color: #0056b3;
-}
-/* Vendor Form Styles */
-.vendor-form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #f4f4f4;
-}
-
-.vendor-form .formm {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 600px;
-}
-
-.vendor-form h2 {
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-}
-
-.vendor-form label {
-  margin-bottom: 8px;
-  font-weight: bold;
-}
-
-.vendor-form input, .vendor-form select {
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 100%;
-}
-
-.vendor-form input:focus, .vendor-form select:focus {
-  outline: none;
-  border-color: #007BFF;
-}
-
-.vendor-form button {
-  padding: 12px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007BFF;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100%;
-}
-
-.vendor-form button:hover {
-  background-color: #0056b3;
-}

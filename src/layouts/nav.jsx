@@ -1,5 +1,5 @@
 import React from 'react';
-import brand from './assets/brand.png';
+import brand from '../assets/brand.png';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 

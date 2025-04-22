@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import avatar from './assets/avatar.png';
 
 function Sign() {
   const [formData, setFormData] = useState({

@@ -1,5 +1,4 @@
 import React from 'react';
-import avatar from './assets/avatar.png';
 import { Link } from 'react-router-dom';
 
 function Log() {

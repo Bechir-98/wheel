@@ -15,7 +15,7 @@ function FAQ() {
           </Accordion.Body>
         </Accordion.Item>
 
-        <Accordion.Item eventKey="1">
+        <Accordion.Item eventKey="1"> 
           <Accordion.Header>2. How do I get started?</Accordion.Header>
           <Accordion.Body>
             Simply click on "Sign Up" or "Start as" from the homepage and choose your role (Patient, Clinician, or Vendor) to begin the onboarding process.

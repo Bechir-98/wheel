@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './WheelchairsPage.css'; // Add your CSS file here
+import '../styles/WheelchairsPage.css'; // Add your CSS file here
 
 const WheelchairsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
