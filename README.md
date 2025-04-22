@@ -55,6 +55,7 @@
 ## 📁 Project Structure
 
 
+
 wheel-match/
 ├── public/                 # Static assets
 ├── src/
@@ -67,61 +68,6 @@ wheel-match/
 
 
 
----
-
-## ⚙️ Tech Stack
-
-- ⚛️ **React** — frontend UI library  
-- 🔁 **React Router DOM** — routing and page transitions  
-- 🎨 **Bootstrap** — for responsive UI and layout  
-- ⚡ **Vite** — fast dev server and bundler (optional)  
-- 🐘 **PHP & MySQL** — backend logic and database  
-
----
-
-## 🧬 Database Design Overview
-
-### 📌 Key Entities
-- `Utilisateur` (Superclass: `Patient`, `Clinicien`, `Commerçant`)  
-- `Fauteuil` (Wheelchair): `Type_fauteuil`, `Option`, `Composant`  
-- `Consultation` (links patients and clinicians)  
-- `Pathologie` & `Morphologie` (mapped to wheelchair suitability)  
-
-### 🔑 Key Actions
-- `commander` (order)  
-- `choisir` (choose)  
-- `effectuer`, `concerner`, and more for role-based workflows  
-
----
-
-## 📌 Upcoming Enhancements
-
-- 🔎 **Advanced filtering** and search for wheelchairs  
-- 📊 **Analytics dashboard** for clinicians and vendors  
-- 📨 **In-app notifications** for updates and alerts  
-- 📱 **Full mobile optimization** for on-the-go access  
-
----
-
-## 🤝 Contribution
-
-We welcome contributions and feedback!  
-If you'd like to contribute:
-
-1. Fork the repository  
-2. Create a new branch  
-3. Make your changes  
-4. Submit a Pull Request  
-
-For bugs, suggestions, or ideas, feel free to [open an issue](#)!
-
----
-
-## 📝 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
 
 ---
 
@@ -173,58 +119,3 @@ For bugs, suggestions, or ideas, feel free to [open an issue](#)!
 
 ---
 
-## 📝 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
----
-
-## ⚙️ Tech Stack
-
-- ⚛️ **React** — frontend UI library  
-- 🔁 **React Router DOM** — routing and page transitions  
-- 🎨 **Bootstrap** — for responsive UI and layout  
-- ⚡ **Vite** — fast dev server and bundler (optional)  
-- 🐘 **PHP & MySQL** — backend logic and database  
-
----
-
-## 🧬 Database Design Overview
-
-### 📌 Key Entities
-- `Utilisateur` (Superclass: `Patient`, `Clinicien`, `Commerçant`)  
-- `Fauteuil` (Wheelchair): `Type_fauteuil`, `Option`, `Composant`  
-- `Consultation` (links patients and clinicians)  
-- `Pathologie` & `Morphologie` (mapped to wheelchair suitability)  
-
-### 🔑 Key Actions
-- `commander` (order)  
-- `choisir` (choose)  
-- `effectuer`, `concerner`, and more for role-based workflows  
-
----
-
-## 📌 Upcoming Enhancements
-
-- 🔎 **Advanced filtering** and search for wheelchairs  
-- 📊 **Analytics dashboard** for clinicians and vendors  
-- 📨 **In-app notifications** for updates and alerts  
-- 📱 **Full mobile optimization** for on-the-go access  
-
----
-
-## 🤝 Contribution
-
-We welcome contributions and feedback!  
-If you'd like to contribute:
-
-1. Fork the repository  
-2. Create a new branch  
-3. Make your changes  
-4. Submit a Pull Request  
-
-For bugs, suggestions, or ideas, feel free to [open an issue](#)!
-
----
