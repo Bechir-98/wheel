@@ -4,7 +4,7 @@ Wheel Match is a modern web platform that connects patients, clinicians, and ven
 Designed using React and backed by a robust PHP/MySQL backend, Wheel Match combines user-friendly UI with powerful data handling to recommend the best wheelchair for each patient's unique needs.
 
 📸 Preview
-![App Preview](https://imgur.com/a/0QVehq0)
+![App Preview]<blockquote class="imgur-embed-pub" lang="en" data-id="a/0QVehq0" data-context="false" ><a href="//imgur.com/a/0QVehq0"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 
 🚀 Features
