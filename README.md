@@ -1,12 +1,113 @@
-# React + Vite
+🦽 Wheel Match
+Wheel Match is a modern web platform that connects patients, clinicians, and vendors to facilitate the selection of customized wheelchairs. With role-based functionality and a dynamic wheelchair catalog, the application ensures a smooth and tailored user experience.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Designed using React and backed by a robust PHP/MySQL backend, Wheel Match combines user-friendly UI with powerful data handling to recommend the best wheelchair for each patient's unique needs.
 
-Currently, two official plugins are available:
+📸 Preview
+![App Preview](https://imgur.com/a/0QVehq0)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+🚀 Features
+🧭 General
+🏠 Landing Page with intuitive navigation
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🔐 Authentication (Sign Up / Log In)
+
+❓ FAQ Section
+
+🎨 Clean, responsive layout using Bootstrap
+
+📚 Wheelchair Catalog
+🦽 Browse available wheelchairs
+
+📄 Detailed wheelchair view with type, options, and components
+
+📦 Stock quantity and price visibility
+
+👥 Role-Based User Experience
+👤 Patients
+Submit personal details (weight, height, daily usage, etc.)
+
+View personalized wheelchair recommendations
+
+Place orders with clinician approval
+
+👩‍⚕️ Clinicians
+Access and manage patient profiles
+
+Perform medical consultations
+
+Link diagnoses and morphologies to appropriate wheelchairs
+
+🧑‍💼 Vendors
+Manage wheelchair listings, stock, and pricing
+
+Associate wheelchairs with components and options
+
+🧠 Intelligent Matching
+🔄 Wheelchair suitability based on morphology, pathologies, and user usage profile
+
+🧩 Modular design using components, types, and options
+
+🧾 Historical tracking of consultations, choices, and orders
+
+📁 Project Structure
+php
+Copier
+Modifier
+wheel-match/
+├── public/                 # Static assets
+├── src/
+│   ├── assets/             # Images and media
+│   ├── layouts/            # Shared UI components (Navbar, Footer)
+│   ├── pages/              # Views for Home, Login, Signup, Dashboard, etc.
+│   ├── routes/             # Route definitions using React Router
+│   ├── styles/             # CSS or SCSS files
+│   └── App.jsx             # Main application entry
+
+
+⚙️ Tech Stack
+
+⚛️ React
+
+🔁 React Router DOM
+
+🎨 Bootstrap (for UI responsiveness)
+
+⚡ Vite (optional: fast build tool)
+
+🐘 PHP & MySQL (backend & data handling)
+
+📌 Database Overview (based on new MCD)
+Key entities:
+
+Utilisateur (superclass for Patient, Clinicien, and Commerçant)
+
+Fauteuil (wheelchair) with:
+
+Type_fauteuil
+
+Option
+
+Composant
+
+Consultation between patients and clinicians
+
+Pathologie and Morphologie mapped to suitable wheelchairs
+
+Role-specific actions:
+
+commander (ordering)
+
+choisir (selection)
+
+effectuer, concerner, etc. for interaction flows
+
+📌 Upcoming Enhancements
+🔎 Advanced wheelchair filtering based on needs
+
+📊 Analytics dashboard for clinicians and vendors
+
+📨 In-app notifications for order updates
+
+📱 Mobile-optimized experience
