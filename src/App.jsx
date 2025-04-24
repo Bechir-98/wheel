@@ -9,7 +9,6 @@ import Footer from './layouts/footer.jsx';
 function App() {
   return (
       <>
-   
       <RouteR />     
       <Footer />  
    </>

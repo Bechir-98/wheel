@@ -6,13 +6,15 @@ import Log from '../pages/log.jsx';
 import Navb from '../layouts/nav.jsx';
 import FAQ from '../pages/faq.jsx';
 
+import ClinicianDashboard from '../pages/Dashboard_clinicien.jsx';
+import VendorDashboard from '../pages/VendorDashboard.jsx';
 
 // Import the missing pages (ensure these components exist)
 import PatientPage from '../pages/PatientPage.jsx';  // For patients to fill in their details
 import ClinicianPage from '../pages/ClinicianPage.jsx'; // For clinicians to fill in their details
 import VendorPage from '../pages/VendorPage.jsx'; // For vendors to fill in their details
 import WheelchairDetails from '../pages/WheelchairsPage.jsx';  // For wheelchair-specific details
-import Patient from '../pages/Patient_Dashboard';
+ import PatientDashboard from '../pages/Patient_Dashboard';
 
 function RouteR(){
 return(
@@ -36,6 +38,13 @@ return(
           <Route path="/patient" element={<PatientPage />} />
           <Route path="/clinician" element={<ClinicianPage />} />
           <Route path="/vendor" element={<VendorPage />} />
+
+         {/* dashboards */}
+          <Route path='/patientdashboard'  element={<PatientDashboard/>}/> 
+          <Route path='/vendordashboard'  element={<VendorDashboard/>}/>
+          <Route path='/cliniciandashboard'  element={<ClinicianDashboard/>}/>
+
+          
 
           {/* FAQ Page */}
           <Route path="/faq" element={<FAQ />} />

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function PatientDashboard() {
+function ClinicianDashboard() {
   return (
     <div className="dashboard-wrapper">
       {/* Left Sidebar */}
@@ -12,7 +12,7 @@ function PatientDashboard() {
             <div className="user-avatar">SJ</div>
           </div>
           <h5>Sarah Johnson</h5>
-          <p className="user-type">Patient</p>
+          <p className="user-type">Clinician</p>
           <Button variant="outline-primary" size="sm" className="logout-btn">
             <i className="fa fa-sign-out"></i> Logout
           </Button>
@@ -21,10 +21,10 @@ function PatientDashboard() {
         <div className="sidebar-nav">
           <ul className="nav flex-column">
             <li className="nav-item active">📊 Dashboard</li>
-            <li className="nav-item">👤 My Profile</li>
-            <li className="nav-item">📅 Appointments</li>
-            <li className="nav-item">📋 Medical Records</li>
-            <li className="nav-item">💬 Messages</li>
+            <li className="nav-item">📅 Consultations</li>
+            <li className="nav-item">👥 Patients</li>
+            <li className="nav-item">📋 Assessments</li>
+            <li className="nav-item">💊 Prescriptions</li>
             <li className="nav-item">⚙️ Settings</li>
           </ul>
         </div>
@@ -38,8 +38,8 @@ function PatientDashboard() {
             <Col md={3} sm={6} className="mb-3">
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column justify-content-center">
-                  <div className="stat-value">2</div>
-                  <p className="stat-label mb-0">Upcoming Appointments</p>
+                  <div className="stat-value">186</div>
+                  <p className="stat-label mb-0">Total Patients</p>
                 </Card.Body>
               </Card>
             </Col>
@@ -47,8 +47,8 @@ function PatientDashboard() {
             <Col md={3} sm={6} className="mb-3">
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column justify-content-center">
-                  <div className="stat-value">4</div>
-                  <p className="stat-label mb-0">Medical Records</p>
+                  <div className="stat-value">42</div>
+                  <p className="stat-label mb-0">Consultations This Month</p>
                 </Card.Body>
               </Card>
             </Col>
@@ -56,8 +56,8 @@ function PatientDashboard() {
             <Col md={3} sm={6} className="mb-3">
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column justify-content-center">
-                  <div className="stat-value">1</div>
-                  <p className="stat-label mb-0">New Messages</p>
+                  <div className="stat-value">8</div>
+                  <p className="stat-label mb-0">Today's Appointments</p>
                 </Card.Body>
               </Card>
             </Col>
@@ -65,8 +65,8 @@ function PatientDashboard() {
             <Col md={3} sm={6} className="mb-3">
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column justify-content-center">
-                  <div className="stat-value">85%</div>
-                  <p className="stat-label mb-0">Treatment Progress</p>
+                  <div className="stat-value">15</div>
+                  <p className="stat-label mb-0">Pending Assessments</p>
                 </Card.Body>
               </Card>
             </Col>
@@ -77,17 +77,17 @@ function PatientDashboard() {
             <Col md={6} className="mb-3">
               <Card className="h-100 dashboard-card">
                 <Card.Header>
-                  <strong>Your Upcoming Appointments</strong>
+                  <strong>Today's Consultations</strong>
                 </Card.Header>
                 <Card.Body>
                   <Card className="appointment-card mb-2">
                     <Card.Body>
                       <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center">
-                          <div className="patient-avatar me-3">DS</div>
+                          <div className="patient-avatar me-3">JD</div>
                           <div>
-                            <h6 className="mb-1">Dr. Smith - Wheelchair Assessment</h6>
-                            <span className="text-muted">April 20, 2025 • 10:00 AM - 11:00 AM</span>
+                            <h6 className="mb-1">John Doe</h6>
+                            <span className="text-muted">9:00 AM - Follow-up</span>
                           </div>
                         </div>
                         <Button variant="outline-primary" size="sm">View</Button>
@@ -98,19 +98,16 @@ function PatientDashboard() {
                     <Card.Body>
                       <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center">
-                          <div className="patient-avatar me-3">DJ</div>
+                          <div className="patient-avatar me-3">ES</div>
                           <div>
-                            <h6 className="mb-1">Physical Therapy with Dr. Johnson</h6>
-                            <span className="text-muted">April 28, 2025 • 2:30 PM - 3:30 PM</span>
+                            <h6 className="mb-1">Emily Smith</h6>
+                            <span className="text-muted">11:30 AM - Initial consultation</span>
                           </div>
                         </div>
                         <Button variant="outline-primary" size="sm">View</Button>
                       </div>
                     </Card.Body>
                   </Card>
-                  <div className="text-center mt-3">
-                    <Button variant="primary">View All Appointments</Button>
-                  </div>
                 </Card.Body>
               </Card>
             </Col>
@@ -118,91 +115,53 @@ function PatientDashboard() {
             <Col md={6} className="mb-3">
               <Card className="h-100 dashboard-card">
                 <Card.Header>
-                  <strong>Messages</strong>
+                  <strong>Recent Assessments</strong>
                 </Card.Header>
                 <Card.Body>
-                  <Card className="message-card mb-2">
+                  <Card className="appointment-card mb-2">
                     <Card.Body>
                       <div className="d-flex justify-content-between align-items-center">
                         <div className="d-flex align-items-center">
-                          <div className="patient-avatar me-3">DA</div>
+                          <div className="patient-avatar me-3">RJ</div>
                           <div>
-                            <h6 className="mb-1">Dr. Amina</h6>
-                            <span className="text-muted">Please remember to fast before your blood test appointment...</span>
+                            <h6 className="mb-1">Robert Johnson</h6>
+                            <span className="text-muted">Completed yesterday</span>
                           </div>
                         </div>
-                        <Badge bg="primary" className="message-badge">New</Badge>
+                        <Button variant="outline-primary" size="sm">View</Button>
                       </div>
                     </Card.Body>
                   </Card>
-                  <div className="text-center mt-3">
-                    <Button variant="primary">Go to Messages</Button>
-                  </div>
+                  <Card className="appointment-card">
+                    <Card.Body>
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div className="d-flex align-items-center">
+                          <div className="patient-avatar me-3">AL</div>
+                          <div>
+                            <h6 className="mb-1">Alice Lee</h6>
+                            <span className="text-muted">Pending review</span>
+                          </div>
+                        </div>
+                        <Button variant="outline-primary" size="sm">Review</Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
                 </Card.Body>
               </Card>
             </Col>
           </Row>
 
-          {/* Bottom Sections */}
+          {/* Bottom Section */}
           <Row>
-            <Col md={6} className="mb-3">
+            <Col md={12}>
               <Card className="dashboard-card">
                 <Card.Header>
-                  <strong>Medical Records</strong>
+                  <strong>Patient Statistics</strong>
                 </Card.Header>
                 <Card.Body>
-                  <p className="text-muted mb-3">Last Updated: April 12, 2025</p>
-                  <ul className="records-list">
-                    <li className="record-item d-flex align-items-center mb-2">
-                      <div className="check-icon me-2">✓</div>
-                      <span>Blood Test Results</span>
-                    </li>
-                    <li className="record-item d-flex align-items-center mb-2">
-                      <div className="check-icon me-2">✓</div>
-                      <span>X-Ray Report</span>
-                    </li>
-                    <li className="record-item d-flex align-items-center mb-2">
-                      <div className="check-icon me-2">✓</div>
-                      <span>Wheelchair Fitting Assessment</span>
-                    </li>
-                    <li className="record-item d-flex align-items-center mb-2">
-                      <div className="check-icon me-2">✓</div>
-                      <span>Physical Therapy Notes</span>
-                    </li>
-                  </ul>
-                  <div className="text-center mt-3">
-                    <Button variant="primary">View Full Records</Button>
+                  <div className="placeholder-chart">
+                    <p className="text-muted text-center">Patient demographics and visit trends will be displayed here</p>
                   </div>
-                </Card.Body>
-              </Card>
-            </Col>
-
-            <Col md={6} className="mb-3">
-              <Card className="dashboard-card">
-                <Card.Header>
-                  <strong>Daily Health Tips</strong>
-                </Card.Header>
-                <Card.Body>
-                  <Card className="tip-card mb-2">
-                    <Card.Body>
-                      <div className="d-flex">
-                        <div className="tip-icon me-3">💧</div>
-                        <div>
-                          <p className="mb-0">Drink at least 2 liters of water daily and aim for 30 minutes of physical activity. It's important to maintain proper hydration and exercise, even when using a wheelchair.</p>
-                        </div>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card className="tip-card">
-                    <Card.Body>
-                      <div className="d-flex">
-                        <div className="tip-icon me-3">🔧</div>
-                        <div>
-                          <p className="mb-0">Remember to inspect your wheelchair regularly for any signs of wear. Regular maintenance can prevent accidents and extend the life of your mobility device.</p>
-                        </div>
-                      </div>
-                    </Card.Body>
-                  </Card>
                 </Card.Body>
               </Card>
             </Col>
@@ -338,7 +297,7 @@ function PatientDashboard() {
           border-radius: 10px;
         }
 
-        .appointment-card, .message-card, .tip-card {
+        .appointment-card {
           background-color: #f8f9fa;
           border: none;
           margin-bottom: 10px;
@@ -346,7 +305,7 @@ function PatientDashboard() {
           transition: background-color 0.2s;
         }
 
-        .appointment-card:hover, .message-card:hover, .tip-card:hover {
+        .appointment-card:hover {
           background-color: #e9ecef;
         }
 
@@ -363,24 +322,13 @@ function PatientDashboard() {
           font-size: 0.8rem;
         }
 
-        .message-badge {
-          font-size: 0.7rem;
-          padding: 0.35em 0.65em;
-        }
-
-        .records-list {
-          list-style-type: none;
-          padding-left: 0;
-        }
-
-        .check-icon {
-          color: #198754;
-          font-weight: bold;
-        }
-
-        .tip-icon {
-          font-size: 1.5rem;
-          line-height: 1.2;
+        .placeholder-chart {
+          height: 300px;
+          background-color: #f8f9fa;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         @media (max-width: 768px) {
@@ -403,13 +351,4 @@ function PatientDashboard() {
   );
 }
 
-// This is needed for the Badge component
-const Badge = ({ bg, className, children }) => {
-  return (
-    <span className={`badge bg-${bg} ${className}`}>
-      {children}
-    </span>
-  );
-};
-
-export default PatientDashboard;
+export default ClinicianDashboard;

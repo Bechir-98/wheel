@@ -30,7 +30,7 @@ function Home() {
             <div className='selectB'>
               <Button
                 component={Link}
-                to="/sign"
+                to="/patientdashboard"
                 variant="contained"
                 sx={buttonStyle}
               >
@@ -38,7 +38,7 @@ function Home() {
               </Button>
               <Button
                 component={Link}
-                to="/sign"
+                to="/cliniciandashboard"
                 variant="contained"
                 sx={buttonStyle}
               >
@@ -46,7 +46,7 @@ function Home() {
               </Button>
               <Button
                 component={Link}
-                to="/sign"
+                to="/vendordashboard"
                 variant="contained"
                 sx={buttonStyle}
               >
