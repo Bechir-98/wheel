@@ -4,7 +4,7 @@ import './styles/index.css';
 import App from './App.jsx';
 
 
-ReactDOM.createRoot(document.getElementById('welcome')).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
     <App />
   </StrictMode>

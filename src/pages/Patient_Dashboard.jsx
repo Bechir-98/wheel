@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button, Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 
 function PatientDashboard() {
@@ -10,7 +10,6 @@ function PatientDashboard() {
       {/* Left Sidebar */}
       <Sidebar role="patient" />
      
-
       {/* Main Content */}
       <div className="main-content">
         <Container fluid>
@@ -54,20 +53,20 @@ function PatientDashboard() {
           </Row>
 
           {/* Middle Section */}
-          <Row className="mb-4">
+          <Row className="mb-5">
             <Col md={6} className="mb-3">
-              <Card className="h-100 dashboard-card">
+              <Card className="dashboard-card w-100 h-100">
                 <Card.Header>
                   <strong>Your Upcoming Appointments</strong>
                 </Card.Header>
                 <Card.Body>
-                  <Card className="appointment-card mb-2">
+                  <Card className="appointment-card mb-2 w-100 h-25">
                     <Card.Body>
-                      <div className="d-flex justify-content-between align-items-center">
+                      <div className="">
                         <div className="d-flex align-items-center">
                           <div className="patient-avatar me-3">DS</div>
                           <div>
-                            <h6 className="mb-1">Dr. Smith - Wheelchair Assessment</h6>
+                            <h6 className="mb-Z">Dr. Smith - Wheelchair Assessment</h6>
                             <span className="text-muted">April 20, 2025 • 10:00 AM - 11:00 AM</span>
                           </div>
                         </div>
@@ -75,13 +74,14 @@ function PatientDashboard() {
                       </div>
                     </Card.Body>
                   </Card>
-                  <Card className="appointment-card">
+                    
+                  <Card className="appointment-card mb-4 w-100 h-25">
                     <Card.Body>
-                      <div className="d-flex justify-content-between align-items-center">
+                      <div className="">
                         <div className="d-flex align-items-center">
                           <div className="patient-avatar me-3">DJ</div>
                           <div>
-                            <h6 className="mb-1">Physical Therapy with Dr. Johnson</h6>
+                            <h6 className="mb-2">Physical Therapy with Dr. Johnson</h6>
                             <span className="text-muted">April 28, 2025 • 2:30 PM - 3:30 PM</span>
                           </div>
                         </div>
@@ -96,19 +96,20 @@ function PatientDashboard() {
               </Card>
             </Col>
 
+            {/* Messages and Daily Tips */}
             <Col md={6} className="mb-3">
-              <Card className="h-100 dashboard-card">
+              <Card className="h-50 dashboard-card w-100 ">
                 <Card.Header>
                   <strong>Messages</strong>
                 </Card.Header>
-                <Card.Body>
-                  <Card className="message-card mb-2">
-                    <Card.Body>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <div className="d-flex align-items-center">
+                <Card.Body className='d-flex align-items-center mb-2 flex-wrap'>
+                  <Card className="message-card mb-2 h-50 w-75 ">
+                    <Card.Body >
+                      <div className="">
+                        <div className="">
                           <div className="patient-avatar me-3">DA</div>
                           <div>
-                            <h6 className="mb-1">Dr. Amina</h6>
+                            <h6 className="mb-1 ">Dr. Amina</h6>
                             <span className="text-muted">Please remember to fast before your blood test appointment...</span>
                           </div>
                         </div>
@@ -116,18 +117,13 @@ function PatientDashboard() {
                       </div>
                     </Card.Body>
                   </Card>
-                  <div className="text-center mt-3">
+                  <div className="text-center ms-5 w-50 ">
                     <Button variant="primary">Go to Messages</Button>
                   </div>
                 </Card.Body>
               </Card>
-            </Col>
-          </Row>
 
-          {/* Bottom Sections */}
-          <Row>
-            <Col md={6} className="mb-3">
-              <Card className="dashboard-card">
+              <Card className="dashboard-card h-50  w-100">
                 <Card.Header>
                   <strong>Medical Records</strong>
                 </Card.Header>
@@ -157,46 +153,51 @@ function PatientDashboard() {
                 </Card.Body>
               </Card>
             </Col>
+          </Row>
 
-            <Col md={6} className="mb-3">
-              <Card className="dashboard-card">
-                <Card.Header>
-                  <strong>Daily Health Tips</strong>
-                </Card.Header>
-                <Card.Body>
-                  <Card className="tip-card mb-2">
-                    <Card.Body>
-                      <div className="d-flex">
-                        <div className="tip-icon me-3">💧</div>
-                        <div>
-                          <p className="mb-0">Drink at least 2 liters of water daily and aim for 30 minutes of physical activity. It's important to maintain proper hydration and exercise, even when using a wheelchair.</p>
-                        </div>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                  <Card className="tip-card">
-                    <Card.Body>
-                      <div className="d-flex">
-                        <div className="tip-icon me-3">🔧</div>
-                        <div>
-                          <p className="mb-0">Remember to inspect your wheelchair regularly for any signs of wear. Regular maintenance can prevent accidents and extend the life of your mobility device.</p>
-                        </div>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Card.Body>
-              </Card>
-            </Col>
+          {/* Bottom Section: Medical Records */}
+          <Row>
+          <Col md={12} className="mb-3">
+  <Card className="dashboard-card w-100">
+    <Card.Header>
+      <strong>Daily Health Tips</strong>
+    </Card.Header>
+    <Card.Body className="d-flex flex-column align-items-center">
+      <Card className="tip-card mb-3 w-75">
+        <Card.Body>
+          <div className="d-flex">
+            <div className="tip-icon me-3">💧</div>
+            <div>
+              <p className="mb-0">
+                Drink at least 2 liters of water daily and aim for 30 minutes of physical activity. It's important to maintain proper hydration and exercise, even when using a wheelchair.
+              </p>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+      <Card className="tip-card w-75">
+        <Card.Body>
+          <div className="d-flex">
+            <div className="tip-icon me-3">🔧</div>
+            <div>
+              <p className="mb-0">
+                Remember to inspect your wheelchair regularly for any signs of wear. Regular maintenance can prevent accidents and extend the life of your mobility device.
+              </p>
+            </div>
+          </div>
+        </Card.Body>
+      </Card>
+    </Card.Body>
+  </Card>
+</Col>
           </Row>
         </Container>
       </div>
-      
-     
     </div>
   );
 }
 
-// This is needed for the Badge component
+// Badge Component
 const Badge = ({ bg, className, children }) => {
   return (
     <span className={`badge bg-${bg} ${className}`}>
