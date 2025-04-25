@@ -20,8 +20,8 @@ import MyProfile from '../pages/dashboard/MyProfile.jsx';
 import Messages from '../pages/dashboard/Messages.jsx';
 import Settings from '../pages/dashboard/Settings.jsx';
 
-
-
+// Cart Imports
+import CartPage from '../pages/CartPage.jsx';  // Import the CartPage
 
 function RouteR() {
   return (
@@ -48,11 +48,12 @@ function RouteR() {
           <Route path="/cliniciandashboard" element={<ClinicianDashboard />} />
 
           {/* Shared dashboard pages with sidebar layout */}
-          
-            <Route path="profile" element={<MyProfile />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="settings" element={<Settings />} />
-       
+          <Route path="/profile" element={<MyProfile />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/settings" element={<Settings />} />
+
+          {/* Cart */}
+          <Route path="/cart" element={<CartPage />} />  {/* Added CartPage route */}
 
           {/* FAQ */}
           <Route path="/faq" element={<FAQ />} />

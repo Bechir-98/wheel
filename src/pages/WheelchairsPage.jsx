@@ -1,161 +1,113 @@
-import React, { useState } from 'react';
-import '../styles/WheelchairsPage.css'; // Add your CSS file here
+
+
+import React, { useState } from "react";
+import { Container, Row, Col, Card, Form, Button, Badge } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+ import "../styles/WheelchairsPage.css";
+
+const fauteuilsData = [
+  {
+    id: 1,
+    nom: "Fauteuil Manuel Léger",
+    prix: 450,
+    note_moyenne: 4.2,
+    image_url: "https://via.placeholder.com/300",
+    type: "manuel",
+    pliable: true,
+  },
+  {
+    id: 2,
+    nom: "Fauteuil Électrique X",
+    prix: 1200,
+    note_moyenne: 4.7,
+    image_url: "https://via.placeholder.com/300",
+    type: "électrique",
+    pliable: false,
+  },
+  // Ajoute d'autres fauteuils ici
+];
 
 const WheelchairsPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [priceRange, setPriceRange] = useState('all');
-  const [type, setType] = useState('all');
+  const [filtreType, setFiltreType] = useState("");
+  const [filtrePliable, setFiltrePliable] = useState("");
 
-  const wheelchairs = [
-    {
-      id: 1,
-      name: "Ultra Lightweight Pro",
-      type: "Manual",
-      price: 1299.99,
-      rating: 4.8,
-      reviews: 156,
-      image: "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?auto=format&fit=crop&w=800&q=80",
-      specs: {
-        weight: "14.5 lbs",
-        width: "16-20 inches",
-        capacity: "250 lbs",
-        foldable: "Yes"
-      }
-    },
-    {
-      id: 2,
-      name: "Power Elite X500",
-      type: "Electric",
-      price: 2999.99,
-      rating: 4.9,
-      reviews: 203,
-      image: "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?auto=format&fit=crop&w=800&q=80",
-      specs: {
-        range: "20 miles",
-        speed: "6 mph",
-        capacity: "300 lbs",
-        battery: "Lithium-ion"
-      }
-    },
-    {
-      id: 3,
-      name: "Sport Performance",
-      type: "Manual",
-      price: 1899.99,
-      rating: 4.7,
-      reviews: 89,
-      image: "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?auto=format&fit=crop&w=800&q=80",
-      specs: {
-        weight: "16 lbs",
-        width: "14-18 inches",
-        capacity: "220 lbs",
-        adjustable: "Full"
-      }
-    },
-    {
-      id: 4,
-      name: "Compact Travel",
-      type: "Manual",
-      price: 899.99,
-      rating: 4.6,
-      reviews: 167,
-      image: "https://images.unsplash.com/photo-1618498082410-b4aa22193b38?auto=format&fit=crop&w=800&q=80",
-      specs: {
-        weight: "19 lbs",
-        width: "16 inches",
-        foldable: "Yes",
-        transport: "Airline approved"
-      }
-    }
-  ];
-
-  const filteredWheelchairs = wheelchairs.filter(wheelchair => {
-    const matchesSearch = wheelchair.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesType = type === 'all' || wheelchair.type === type;
-    const matchesPriceRange = priceRange === 'all' || 
-      (priceRange === 'under1000' && wheelchair.price < 1000) ||
-      (priceRange === '1000to2000' && wheelchair.price >= 1000 && wheelchair.price <= 2000) ||
-      (priceRange === 'over2000' && wheelchair.price > 2000);
-
-    return matchesSearch && matchesType && matchesPriceRange;
+  const fauteuilsFiltres = fauteuilsData.filter((f) => {
+    return (
+      (filtreType === "" || f.type === filtreType) &&
+      (filtrePliable === "" || (filtrePliable === "oui" ? f.pliable : !f.pliable))
+    );
   });
 
   return (
-    <div className="page-container">
-      <div className="content-wrapper">
-        <header>
-          <h1 className="title">Find Your Perfect Wheelchair</h1>
-          
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search wheelchairs..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button className="search-button">Search</button>
-          </div>
-          
-          <div className="filters-container">
-            <div className="filter-group">
-              <label>Price Range</label>
-              <select value={priceRange} onChange={(e) => setPriceRange(e.target.value)}>
-                <option value="all">All Prices</option>
-                <option value="under1000">Under $1,000</option>
-                <option value="1000to2000">$1,000 - $2,000</option>
-                <option value="over2000">Over $2,000</option>
-              </select>
-            </div>
-            
-            <div className="filter-group">
-              <label>Type</label>
-              <select value={type} onChange={(e) => setType(e.target.value)}>
-                <option value="all">All Types</option>
-                <option value="Manual">Manual</option>
-                <option value="Electric">Electric</option>
-              </select>
-            </div>
-          </div>
-        </header>
-        
-        <div className="grid">
-          {filteredWheelchairs.map((wheelchair) => (
-            <div className="wheelchair-card" key={wheelchair.id}>
-              <div className="image-container">
-                <img src={wheelchair.image} alt={wheelchair.name} className="image" />
+    <Container fluid className="py-4 bg-light min-vh-100">
+      <h1 className="text-center mb-4">Catalogue de Fauteuils Roulants</h1>
+
+      {/* Filtres */}
+      <Card className="mb-4 shadow-sm">
+        <Card.Body>
+          <Row className="g-3">
+            <Col md={4}>
+              <Form.Group>
+                <Form.Label>Type de fauteuil</Form.Label>
+                <Form.Select value={filtreType} onChange={(e) => setFiltreType(e.target.value)}>
+                  <option value="">Tous</option>
+                  <option value="manuel">Manuel</option>
+                  <option value="électrique">Électrique</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={4}>
+              <Form.Group>
+                <Form.Label>Pliable</Form.Label>
+                <Form.Select
+                  value={filtrePliable}
+                  onChange={(e) => setFiltrePliable(e.target.value)}
+                >
+                  <option value="">Tous</option>
+                  <option value="oui">Oui</option>
+                  <option value="non">Non</option>
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+
+      {/* Catalogue */}
+      <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+        {fauteuilsFiltres.map((f) => (
+          <Col key={f.id}>
+            <Card className="h-100 shadow-sm">
+              <div className="position-relative" style={{ paddingTop: "75%" }}>
+                <Card.Img
+                  src={f.image_url}
+                  alt={f.nom}
+                  className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
+                />
               </div>
-              
-              <div className="card-content">
-                <h3 className="wheelchair-name">{wheelchair.name}</h3>
-                <div className="rating">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className={`star ${i < Math.floor(wheelchair.rating) ? 'filled' : ''}`}>★</span>
-                  ))}
-                  <span>{wheelchair.rating} ({wheelchair.reviews} reviews)</span>
+              <Card.Body>
+                <Card.Title>{f.nom}</Card.Title>
+                <Card.Text>
+                  <strong>Prix:</strong> <span className="text-primary">{f.prix} €</span>
+                </Card.Text>
+                <div className="d-flex align-items-center mb-2">
+                  <Badge bg="warning" text="dark">
+                    ⭐ {f.note_moyenne}
+                  </Badge>
                 </div>
-                
-                <div className="price">${wheelchair.price.toLocaleString()}</div>
-                
-                <ul className="specs-list">
-                  {Object.entries(wheelchair.specs).map(([key, value]) => (
-                    <li key={key} className="spec-item">
-                      <span>{key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                      <span>{value}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <div className="button-group">
-                  <button className="add-to-cart-button">Add to Cart</button>
-                  <button className="learn-more-button">Learn More</button>
+                <div className="d-flex gap-2">
+                  <Button variant="primary">Ajouter au panier</Button>
+                  <Button variant="outline-primary">Détails</Button>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 };
 
 export default WheelchairsPage;
+
+

@@ -57,7 +57,7 @@ function VendorDashboard() {
           {/* Middle Section */}
           <Row className="mb-4">
             <Col md={6} className="mb-3">
-              <Card className="h-100 dashboard-card">
+              <Card className="h-100 dashboard-card w-100">
                 <Card.Header>
                   <strong>Product Catalog</strong>
                 </Card.Header>
@@ -69,7 +69,7 @@ function VendorDashboard() {
             </Col>
 
             <Col md={6} className="mb-3">
-              <Card className="h-100 dashboard-card">
+              <Card className="h-100 dashboard-card w-100">
                 <Card.Header>
                   <strong>Recent Orders</strong>
                 </Card.Header>
@@ -83,7 +83,7 @@ function VendorDashboard() {
           {/* Bottom Section */}
           <Row>
             <Col md={12}>
-              <Card className="dashboard-card">
+              <Card className="dashboard-card w-100 h-75">
                 <Card.Header>
                   <strong>Sales Statistics</strong>
                 </Card.Header>
