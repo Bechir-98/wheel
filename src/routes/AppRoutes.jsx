@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import WcPage from '../pages/WC.jsx'; // Main page for wheelchair catalog
+import WcPage from '../pages/WC.jsx';
 import Home from '../pages/home.jsx';
 import Sign from '../pages/sign.jsx';
 import Log from '../pages/log.jsx';
@@ -8,52 +8,58 @@ import FAQ from '../pages/faq.jsx';
 
 import ClinicianDashboard from '../pages/Dashboard_clinicien.jsx';
 import VendorDashboard from '../pages/VendorDashboard.jsx';
+import PatientDashboard from '../pages/Patient_Dashboard.jsx';
 
-// Import the missing pages (ensure these components exist)
-import PatientPage from '../pages/PatientPage.jsx';  // For patients to fill in their details
-import ClinicianPage from '../pages/ClinicianPage.jsx'; // For clinicians to fill in their details
-import VendorPage from '../pages/VendorPage.jsx'; // For vendors to fill in their details
-import WheelchairDetails from '../pages/WheelchairsPage.jsx';  // For wheelchair-specific details
- import PatientDashboard from '../pages/Patient_Dashboard';
+import PatientPage from '../pages/PatientPage.jsx';
+import ClinicianPage from '../pages/ClinicianPage.jsx';
+import VendorPage from '../pages/VendorPage.jsx';
+import WheelchairDetails from '../pages/WheelchairsPage.jsx';
 
-function RouteR(){
-return(
-<>
+// NEW IMPORTS
+import MyProfile from '../pages/dashboard/MyProfile.jsx';
+import Messages from '../pages/dashboard/Messages.jsx';
+import Settings from '../pages/dashboard/Settings.jsx';
 
-<Router>
+
+
+
+function RouteR() {
+  return (
+    <Router>
       <div className="App">
-      <Navb/>
+        <Navb />
         <Routes>
           <Route path="/" element={<Home />} />
-          {/* Wheelchair Catalog Page */}
-          <Route path="/wheelchairs" element={<WheelchairDetails />} /> {/* Displays all wheelchairs */}
-          {/* Wheelchair Detail Page */}
-          <Route path="/wheelchair/:id" element={<WheelchairDetails />} /> {/* Displays details of a specific wheelchair */}
-          
-          {/* User Signup and Login Pages */}
+          <Route path="/wheelchairs" element={<WheelchairDetails />} />
+          <Route path="/wheelchair/:id" element={<WheelchairDetails />} />
+
+          {/* User Signup and Login */}
           <Route path="/sign" element={<Sign />} />
           <Route path="/log" element={<Log />} />
 
-          {/* User Profile Pages based on their profession */}
+          {/* Profession-specific pages */}
           <Route path="/patient" element={<PatientPage />} />
           <Route path="/clinician" element={<ClinicianPage />} />
           <Route path="/vendor" element={<VendorPage />} />
 
-         {/* dashboards */}
-          <Route path='/patientdashboard'  element={<PatientDashboard/>}/> 
-          <Route path='/vendordashboard'  element={<VendorDashboard/>}/>
-          <Route path='/cliniciandashboard'  element={<ClinicianDashboard/>}/>
+          {/* Dashboards */}
+          <Route path="/patientdashboard" element={<PatientDashboard />} />
+          <Route path="/vendordashboard" element={<VendorDashboard />} />
+          <Route path="/cliniciandashboard" element={<ClinicianDashboard />} />
 
+          {/* Shared dashboard pages with sidebar layout */}
           
+            <Route path="profile" element={<MyProfile />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="settings" element={<Settings />} />
+       
 
-          {/* FAQ Page */}
+          {/* FAQ */}
           <Route path="/faq" element={<FAQ />} />
         </Routes>
-       
       </div>
     </Router>
-    </>
-);
+  );
 }
 
 export default RouteR;

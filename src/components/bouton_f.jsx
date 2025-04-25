@@ -7,7 +7,7 @@ const ArrowButtonStyled = styled(motion.button)`
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 8px; 
   display: flex;
   align-items: center;
   justify-content: center;
