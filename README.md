@@ -55,7 +55,7 @@
 ## 📁 Project Structure
 
 
-
+```text
 wheel-match/
 ├── public/                 # Static assets
 ├── src/
@@ -66,7 +66,7 @@ wheel-match/
 │   ├── styles/             # Custom styles (CSS or SCSS)
 │   └── App.jsx             # Application entry point
 
-
+```
 
 
 ---
