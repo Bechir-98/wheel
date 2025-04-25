@@ -1,113 +1,126 @@
-
-
 import React, { useState } from "react";
-import { Container, Row, Col, Card, Form, Button, Badge } from "react-bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
- import "../styles/WheelchairsPage.css";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ShoppingCart, Info } from "lucide-react";
 
-const fauteuilsData = [
+
+// Temporary data - Replace with actual data from your database
+const wheelchairsData: = [
   {
-    id: 1,
-    nom: "Fauteuil Manuel Léger",
-    prix: 450,
-    note_moyenne: 4.2,
-    image_url: "https://via.placeholder.com/300",
-    type: "manuel",
-    pliable: true,
+    ID_FAUTEUIL: 1,
+    ID_TYPE: 1,
+    ID_UTILISATUER: 1,
+    PROPULTION: 1,
+    PRIX: 450.00,
+    QT_STOCK: 10,
+    type: { ID_TYPE: 1, NOM_TYPE: "Manuel" },
+    options: [
+      { ID_OPTION: 1, NOM_OPTION: "Pliable", TAILLE_OPTION: 0 }
+    ]
   },
   {
-    id: 2,
-    nom: "Fauteuil Électrique X",
-    prix: 1200,
-    note_moyenne: 4.7,
-    image_url: "https://via.placeholder.com/300",
-    type: "électrique",
-    pliable: false,
+    ID_FAUTEUIL: 2,
+    ID_TYPE: 2,
+    ID_UTILISATUER: 1,
+    PROPULTION: 2,
+    PRIX: 1200.00,
+    QT_STOCK: 5,
+    type: { ID_TYPE: 2, NOM_TYPE: "Électrique" }
   },
-  // Ajoute d'autres fauteuils ici
 ];
 
 const WheelchairsPage = () => {
-  const [filtreType, setFiltreType] = useState("");
-  const [filtrePliable, setFiltrePliable] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [propulsionFilter, setPropulsionFilter] = useState("all");
 
-  const fauteuilsFiltres = fauteuilsData.filter((f) => {
-    return (
-      (filtreType === "" || f.type === filtreType) &&
-      (filtrePliable === "" || (filtrePliable === "oui" ? f.pliable : !f.pliable))
-    );
+  const filteredWheelchairs = wheelchairsData.filter((wheelchair) => {
+    const matchesType = typeFilter === "all" || wheelchair.type?.ID_TYPE.toString() === typeFilter;
+    const matchesPropulsion = propulsionFilter === "all" || wheelchair.PROPULTION.toString() === propulsionFilter;
+    return matchesType && matchesPropulsion;
   });
 
   return (
-    <Container fluid className="py-4 bg-light min-vh-100">
-      <h1 className="text-center mb-4">Catalogue de Fauteuils Roulants</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Catalogue de Fauteuils Roulants</h1>
 
-      {/* Filtres */}
-      <Card className="mb-4 shadow-sm">
-        <Card.Body>
-          <Row className="g-3">
-            <Col md={4}>
-              <Form.Group>
-                <Form.Label>Type de fauteuil</Form.Label>
-                <Form.Select value={filtreType} onChange={(e) => setFiltreType(e.target.value)}>
-                  <option value="">Tous</option>
-                  <option value="manuel">Manuel</option>
-                  <option value="électrique">Électrique</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={4}>
-              <Form.Group>
-                <Form.Label>Pliable</Form.Label>
-                <Form.Select
-                  value={filtrePliable}
-                  onChange={(e) => setFiltrePliable(e.target.value)}
-                >
-                  <option value="">Tous</option>
-                  <option value="oui">Oui</option>
-                  <option value="non">Non</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Type de fauteuil</label>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tous les types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous</SelectItem>
+                <SelectItem value="1">Manuel</SelectItem>
+                <SelectItem value="2">Électrique</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-      {/* Catalogue */}
-      <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-        {fauteuilsFiltres.map((f) => (
-          <Col key={f.id}>
-            <Card className="h-100 shadow-sm">
-              <div className="position-relative" style={{ paddingTop: "75%" }}>
-                <Card.Img
-                  src={f.image_url}
-                  alt={f.nom}
-                  className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-                />
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Type de propulsion</label>
+            <Select value={propulsionFilter} onValueChange={setPropulsionFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Toutes les propulsions" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tous</SelectItem>
+                <SelectItem value="1">Manuelle</SelectItem>
+                <SelectItem value="2">Électrique</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredWheelchairs.map((wheelchair) => (
+          <Card key={wheelchair.ID_FAUTEUIL} className="overflow-hidden">
+            <div className="aspect-[4/3] relative">
+              <img
+                src="https://via.placeholder.com/400x300"
+                alt={`Fauteuil ${wheelchair.type?.NOM_TYPE}`}
+                className="object-cover w-full h-full"
+              />
+              {wheelchair.QT_STOCK < 5 && (
+                <Badge className="absolute top-2 right-2 bg-red-500">
+                  Stock limité: {wheelchair.QT_STOCK}
+                </Badge>
+              )}
+            </div>
+            <div className="p-4">
+              <h3 className="text-lg font-semibold mb-2">
+                Fauteuil {wheelchair.type?.NOM_TYPE}
+              </h3>
+              <p className="text-xl font-bold text-primary mb-4">
+                {wheelchair.PRIX.toFixed(2)} €
+              </p>
+              <div className="flex gap-2 mt-4">
+                <Button className="flex-1" onClick={() => console.log("Added to cart")}>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Ajouter
+                </Button>
+                <Button variant="outline" className="flex-1">
+                  <Info className="w-4 h-4 mr-2" />
+                  Détails
+                </Button>
               </div>
-              <Card.Body>
-                <Card.Title>{f.nom}</Card.Title>
-                <Card.Text>
-                  <strong>Prix:</strong> <span className="text-primary">{f.prix} €</span>
-                </Card.Text>
-                <div className="d-flex align-items-center mb-2">
-                  <Badge bg="warning" text="dark">
-                    ⭐ {f.note_moyenne}
-                  </Badge>
-                </div>
-                <div className="d-flex gap-2">
-                  <Button variant="primary">Ajouter au panier</Button>
-                  <Button variant="outline-primary">Détails</Button>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
+            </div>
+          </Card>
         ))}
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 };
 
 export default WheelchairsPage;
-
-
