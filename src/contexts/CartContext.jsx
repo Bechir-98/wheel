@@ -1,53 +1,72 @@
 // src/contexts/CartContext.jsx
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Create a context for the cart
-const CartContext = createContext();
+const CartContext = createContext(undefined);
 
-// Custom hook to use the Cart context
-export const useCart = () => useContext(CartContext);
-
-// CartProvider to wrap your app and provide the cart state
 export const CartProvider = ({ children }) => {
-  // Initialize the cart state from localStorage if available
-  const [cart, setCart] = useState(() => {
-    const stored = localStorage.getItem("cart");
-    return stored ? JSON.parse(stored) : [];  // Parse the cart from localStorage or set as empty array
+  const [items, setItems] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
   });
 
-  // Update localStorage whenever the cart state changes
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));  // Store the cart in localStorage
-  }, [cart]);
+    localStorage.setItem('cart', JSON.stringify(items));
+  }, [items]);
 
-  // Add an item to the cart, only if it's not already in the cart
-  const addToCart = (wheelchair) => {
-    setCart((prev) => {
-      const exists = prev.find((item) => item.id === wheelchair.id);  // Check if the item already exists
-      if (exists) return prev;  // If item already exists, don't add it again
-      return [...prev, wheelchair];  // Otherwise, add it to the cart
+  const addItem = (newItem) => {
+    setItems((currentItems) => {
+      const existingItem = currentItems.find((item) => item.id === newItem.id);
+      if (existingItem) {
+        return currentItems.map((item) =>
+          item.id === newItem.id
+            ? { ...item, quantity: item.quantity + newItem.quantity }
+            : item
+        );
+      }
+      return [...currentItems, newItem];
     });
   };
 
-  // Remove an item from the cart by its id
-  const removeFromCart = (id) => {
-    setCart((prev) => {
-      const updatedCart = prev.filter((item) => item.id !== id);  // Remove the item by id
-      localStorage.setItem("cart", JSON.stringify(updatedCart));  // Update localStorage
-      return updatedCart;  // Return the updated cart
-    });
+  const removeItem = (id) => {
+    setItems((currentItems) => currentItems.filter((item) => item.id !== id));
   };
 
-  // Clear all items from the cart
+  const updateQuantity = (id, quantity) => {
+    setItems((currentItems) =>
+      currentItems.map((item) =>
+        item.id === id ? { ...item, quantity: Math.max(0, quantity) } : item
+      )
+    );
+  };
+
   const clearCart = () => {
-    setCart([]);  // Clear the cart state
-    localStorage.setItem("cart", JSON.stringify([]));  // Clear localStorage
+    setItems([]);
   };
 
-  // Provide cart state and functions to the rest of the app
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{
+        items,
+        addItem,
+        removeItem,
+        updateQuantity,
+        clearCart,
+        totalItems,
+        totalPrice,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
+};
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 };
