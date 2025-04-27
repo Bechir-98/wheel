@@ -14,6 +14,8 @@ import PatientPage from '../pages/PatientPage.jsx';
 import ClinicianPage from '../pages/ClinicianPage.jsx';
 import VendorPage from '../pages/VendorPage.jsx';
 import WheelchairDetails from '../pages/WheelchairsPage.jsx';
+import WheelchairDetail from '../components/WheelchairDetail';
+
 
 // NEW IMPORTS
 import MyProfile from '../pages/dashboard/MyProfile.jsx';
@@ -31,7 +33,7 @@ function RouteR() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/wheelchairs" element={<WheelchairDetails />} />
-          <Route path="/wheelchair/:id" element={<WheelchairDetails />} />
+          <Route path="/wheelchairs/:id" element={<WheelchairDetail />} />
 
           {/* User Signup and Login */}
           <Route path="/sign" element={<Sign />} />
