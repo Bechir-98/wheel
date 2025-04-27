@@ -1,48 +1,37 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
-header('Content-Type: application/json');
+header("Content-Type: application/json");
 
-// OR establish connection directly:
- $conn = new mysqli("localhost", "root", "", "wheel");
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "wheel";
 
-// Check connection
-if ($conn->connect_error) {
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    $stmt = $conn->prepare("
+        SELECT f.ID_FAUTEUIL, f.PRIX, f.QT_STOCK, f.PROPULTION, 
+               t.NOM_TYPE, t.ID_TYPE
+        FROM FAUTEUIL f
+        JOIN TYPE_FAUTEUIL t ON f.ID_TYPE = t.ID_TYPE
+        ORDER BY f.ID_FAUTEUIL
+    ");
+    $stmt->execute();
+    
+    $wheelchairs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Add calculated fields for frontend
+    foreach ($wheelchairs as &$wheelchair) {
+        $wheelchair['PROPULTION_TEXT'] = $wheelchair['PROPULTION'] ? 'With propulsion' : 'Manual';
+        $wheelchair['NEW'] = $wheelchair['ID_FAUTEUIL'] > 103; // Mark new entries
+    }
+    
+    echo json_encode($wheelchairs);
+    
+} catch(PDOException $e) {
     http_response_code(500);
-    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
+    echo json_encode(["error" => "Connection failed: " . $e->getMessage()]);
 }
-
-// SQL Query to fetch wheelchairs and their associated data
-$query = "
-    SELECT 
-        f.ID_FAUTEUIL, 
-        f.PRIX, 
-        f.QT_STOCK, 
-        t.NOM_TYPE, 
-        f.PROPULTION
-        /* Removed f.DESCRIPTION as it doesn't exist in your schema */
-    FROM FAUTEUIL f
-    JOIN TYPE_FAUTEUIL t ON f.ID_TYPE = t.ID_TYPE
-    WHERE f.QT_STOCK > 0";
-
-$result = $conn->query($query);
-
-if (!$result) {
-    http_response_code(500);
-    die(json_encode(["error" => "Query failed: " . $conn->error]));
-}
-
-$wheelchairs = [];
-while ($row = $result->fetch_assoc()) {
-    // Convert PROPULTION (0/1) to boolean for better JSON representation
-    $row['PROPULTION'] = (bool)$row['PROPULTION'];
-    $wheelchairs[] = $row;
-}
-
-// Return the data as JSON
-echo json_encode($wheelchairs);
-
-// Close connection
-$conn->close();
 ?>
