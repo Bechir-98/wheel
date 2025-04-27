@@ -1,15 +1,16 @@
-// src/data/wheelchairs.js
+// src/data/wheelchairs.jsx
 
 export const wheelchairsData = [
   {
     ID_FAUT: 1,
     type: {
-      ID_TYPE: 1,
+      ID_TYPE: 1, // Manual Wheelchair
       NOM_TYPE: "Manual Wheelchair Basic",
       category: "manual"
     },
+    ID_UTILISATUER: 1, // Assuming user ID is 1 for now
+    PROPULTION: 1, // Manual
     PRIX: 299.99,
-    PROPULTION: 1,
     QT_STOCK: 10,
     DESCRIPTION: "Basic manual wheelchair for everyday use",
     NEW: true,
@@ -29,12 +30,13 @@ export const wheelchairsData = [
   {
     ID_FAUT: 2,
     type: {
-      ID_TYPE: 2,
+      ID_TYPE: 2, // Electric Wheelchair
       NOM_TYPE: "Electric Wheelchair Premium",
       category: "electric"
     },
+    ID_UTILISATUER: 2, // Assuming user ID is 2 for now
+    PROPULTION: 2, // Electric
     PRIX: 1499.99,
-    PROPULTION: 2,
     QT_STOCK: 5,
     DESCRIPTION: "Advanced electric wheelchair with a long-lasting battery",
     BESTSELLER: true,
@@ -55,12 +57,13 @@ export const wheelchairsData = [
   {
     ID_FAUT: 3,
     type: {
-      ID_TYPE: 3,
+      ID_TYPE: 3, // Sport Wheelchair
       NOM_TYPE: "Sport Wheelchair Elite",
       category: "sport"
     },
+    ID_UTILISATUER: 3, // Assuming user ID is 3 for now
+    PROPULTION: 3, // Sport
     PRIX: 2499.99,
-    PROPULTION: 3,
     QT_STOCK: 3,
     DESCRIPTION: "Lightweight sports wheelchair designed for competitive athletes",
     PROMO: true,
@@ -80,12 +83,13 @@ export const wheelchairsData = [
   {
     ID_FAUT: 4,
     type: {
-      ID_TYPE: 4,
+      ID_TYPE: 1, // Manual Wheelchair
       NOM_TYPE: "All-Terrain Wheelchair",
       category: "manual"
     },
+    ID_UTILISATUER: 4, // Assuming user ID is 4 for now
+    PROPULTION: 2, // Electric Propulsion
     PRIX: 1799.99,
-    PROPULTION: 2,
     QT_STOCK: 7,
     DESCRIPTION: "Wheelchair built for off-road use with all-terrain tires",
     image: "/images/wheelchairs/all-terrain.jpg",
@@ -103,12 +107,13 @@ export const wheelchairsData = [
   {
     ID_FAUT: 5,
     type: {
-      ID_TYPE: 1,
+      ID_TYPE: 1, // Manual Wheelchair
       NOM_TYPE: "Compact Manual Wheelchair",
       category: "manual"
     },
+    ID_UTILISATUER: 5, // Assuming user ID is 5 for now
+    PROPULTION: 1, // Manual
     PRIX: 399.99,
-    PROPULTION: 1,
     QT_STOCK: 8,
     DESCRIPTION: "Compact manual wheelchair ideal for tight spaces and urban environments",
     NEW: true,
@@ -128,12 +133,13 @@ export const wheelchairsData = [
   {
     ID_FAUT: 6,
     type: {
-      ID_TYPE: 2,
+      ID_TYPE: 2, // Electric Wheelchair
       NOM_TYPE: "Electric Wheelchair Basic",
       category: "electric"
     },
+    ID_UTILISATUER: 6, // Assuming user ID is 6 for now
+    PROPULTION: 2, // Electric
     PRIX: 899.99,
-    PROPULTION: 2,
     QT_STOCK: 6,
     DESCRIPTION: "Affordable electric wheelchair for those who need basic features",
     BESTSELLER: true,
@@ -153,12 +159,13 @@ export const wheelchairsData = [
   {
     ID_FAUT: 7,
     type: {
-      ID_TYPE: 3,
+      ID_TYPE: 3, // Sport Wheelchair
       NOM_TYPE: "Sport Wheelchair Pro",
       category: "sport"
     },
+    ID_UTILISATUER: 7, // Assuming user ID is 7 for now
+    PROPULTION: 3, // Sport
     PRIX: 3299.99,
-    PROPULTION: 3,
     QT_STOCK: 2,
     DESCRIPTION: "Premium sports wheelchair with custom-fit design for professionals",
     PROMO: true,
@@ -176,6 +183,7 @@ export const wheelchairsData = [
   }
 ];
 
+// Adjust for wheelchair categories (used in SQL for the `TYPE_FAUTEUIL`)
 export const wheelchairCategories = [
   { id: 'manual', name: 'Manual Wheelchairs', count: 12 },
   { id: 'electric', name: 'Electric Wheelchairs', count: 8 },
@@ -184,6 +192,7 @@ export const wheelchairCategories = [
   { id: 'bariatric', name: 'Bariatric Wheelchairs', count: 3 }
 ];
 
+// Adjust for wheelchair features (mapped for the `OPTION` table)
 export const wheelchairFeatures = [
   { id: 'foldable', name: 'Foldable', count: 15 },
   { id: 'adjustable', name: 'Adjustable', count: 12 },
