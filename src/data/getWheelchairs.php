@@ -1,38 +1,48 @@
 <?php
-// Database connection
-$servername = "localhost";  // Your MySQL server
-$username = "root";         // Your MySQL username
-$password = "";             // Your MySQL password
-$dbname = "wheelchairs_db"; // Your database name
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header('Content-Type: application/json');
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// OR establish connection directly:
+ $conn = new mysqli("localhost", "root", "", "wheel");
 
 // Check connection
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    http_response_code(500);
+    die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }
 
-// Query to fetch wheelchair data with associated type and user data
-$sql = "SELECT f.ID_FAUTEUIL, f.PROPULTION, f.PRIX, f.QT_STOCK, t.NOM_TYPE, u.EMAIL 
-        FROM FAUTEUIL f
-        INNER JOIN TYPE_FAUTEUIL t ON f.ID_TYPE = t.ID_TYPE
-        INNER JOIN UTILISATEUR u ON f.ID_UTILISATUER = u.ID_UTILISATUER";
+// SQL Query to fetch wheelchairs and their associated data
+$query = "
+    SELECT 
+        f.ID_FAUTEUIL, 
+        f.PRIX, 
+        f.QT_STOCK, 
+        t.NOM_TYPE, 
+        f.PROPULTION
+        /* Removed f.DESCRIPTION as it doesn't exist in your schema */
+    FROM FAUTEUIL f
+    JOIN TYPE_FAUTEUIL t ON f.ID_TYPE = t.ID_TYPE
+    WHERE f.QT_STOCK > 0";
 
-$result = $conn->query($sql);
+$result = $conn->query($query);
+
+if (!$result) {
+    http_response_code(500);
+    die(json_encode(["error" => "Query failed: " . $conn->error]));
+}
 
 $wheelchairs = [];
-if ($result->num_rows > 0) {
-    // Fetch all the rows and store in the array
-    while($row = $result->fetch_assoc()) {
-        $wheelchairs[] = $row;
-    }
+while ($row = $result->fetch_assoc()) {
+    // Convert PROPULTION (0/1) to boolean for better JSON representation
+    $row['PROPULTION'] = (bool)$row['PROPULTION'];
+    $wheelchairs[] = $row;
 }
 
-// Close the connection
-$conn->close();
-
 // Return the data as JSON
-header('Content-Type: application/json');
 echo json_encode($wheelchairs);
+
+// Close connection
+$conn->close();
 ?>
