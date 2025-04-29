@@ -1,26 +1,53 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../styles/log.css';
 
 function Log() {
   return (
-    <div className='form'>
-      
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Welcome Back</h2>
+        <p className="login-subtitle">Please enter your details</p>
+        
+        <form className="login-form">
+          <div className="form-group">
+            <label htmlFor="mail">Email Address</label>
+            <input 
+              type="email" 
+              id="mail" 
+              placeholder="Enter your email" 
+              className="input-field"
+            />
+          </div>
 
-      <div className='formm'>
-        <form>
-          <br />
-          <label htmlFor="mail">Email Address</label>
-          <input type="email" id="mail" placeholder="Email Address" />
-          <br />
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              placeholder="Enter your password" 
+              className="input-field"
+            />
+          </div>
 
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" placeholder="Password" />
-          <br />
+          <div className="form-options">
+            <label className="remember-me">
+              <input type="checkbox" /> Remember me
+            </label>
+            <Link to="/forgot-password" className="forgot-password">
+              Forgot password?
+            </Link>
+          </div>
 
-          <button type="submit" className="logbut">Login</button>
-          <br /><br />
-          <p>
-          Don't have an account? <a href="/Sign">Sign here</a>
+          <button type="submit" className="login-button">
+            Sign In
+          </button>
+
+          <p className="signup-prompt">
+            Don't have an account?{' '}
+            <Link to="/Sign" className="signup-link">
+              Sign up
+            </Link>
           </p>
         </form>
       </div>
