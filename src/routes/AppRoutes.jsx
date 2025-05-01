@@ -1,66 +1,78 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import WcPage from '../pages/WC.jsx';
-import Home from '../pages/home.jsx';
-import Sign from '../pages/sign.jsx';
-import Log from '../pages/log.jsx';
-import Navb from '../layouts/nav.jsx';
-import FAQ from '../pages/faq.jsx';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense, lazy } from 'react';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import ProtectedRoute from '../components/auth/ProtectedRoute';
+import Layout from '../layouts/Layout';
 
-import ClinicianDashboard from '../pages/Dashboard_clinicien.jsx';
-import VendorDashboard from '../pages/VendorDashboard.jsx';
-import PatientDashboard from '../pages/Patient_Dashboard.jsx';
+// Lazy load components for better performance
+const Home = lazy(() => import('../pages/home'));
+const WheelchairDetails = lazy(() => import('../pages/WheelchairsPage'));
+const WheelchairDetail = lazy(() => import('../components/WheelchairDetail'));
+const Sign = lazy(() => import('../pages/sign'));
+const Log = lazy(() => import('../pages/log'));
 
-import PatientPage from '../pages/PatientPage.jsx';
-import ClinicianPage from '../pages/ClinicianPage.jsx';
-import VendorPage from '../pages/VendorPage.jsx';
-import WheelchairDetails from '../pages/WheelchairsPage.jsx';
-import WheelchairDetail from '../components/WheelchairDetail';
+// Dashboard imports
+const PatientDashboard = lazy(() => import('../pages/Patient_Dashboard'));
+const VendorDashboard = lazy(() => import('../pages/VendorDashboard'));
+const ClinicianDashboard = lazy(() => import('../pages/Dashboard_clinicien'));
 
+// Shared dashboard pages with sidebar layout
+const MyProfile = lazy(() => import('../pages/dashboard/MyProfile'));
+const Messages = lazy(() => import('../pages/dashboard/Messages'));
+const Settings = lazy(() => import('../pages/dashboard/Settings'));
 
-// NEW IMPORTS
-import MyProfile from '../pages/dashboard/MyProfile.jsx';
-import Messages from '../pages/dashboard/Messages.jsx';
-import Settings from '../pages/dashboard/Settings.jsx';
-
-// Cart Imports
-// import CartPage from '../pages/CartPage.jsx';  // Import the CartPage
+// FAQ
+const FAQ = lazy(() => import('../pages/faq'));
 
 function RouteR() {
   return (
     <Router>
-      <div className="App">
-        <Navb />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/wheelchairs" element={<WheelchairDetails />} />
-          <Route path="/wheelchairs/:id" element={<WheelchairDetail />} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <Layout>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/wheelchairs" element={<WheelchairDetails />} />
+            <Route path="/wheelchairs/:id" element={<WheelchairDetail />} />
+            <Route path="/sign" element={<Sign />} />
+            <Route path="/log" element={<Log />} />
+            <Route path="/faq" element={<FAQ />} />
 
-          {/* User Signup and Login */}
-          <Route path="/sign" element={<Sign />} />
-          <Route path="/log" element={<Log />} />
+            {/* Protected Dashboard Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/patient/*" element={
+                <Routes>
+                  <Route path="dashboard" element={<PatientDashboard />} />
+                  <Route path="profile" element={<MyProfile />} />
+                  <Route path="messages" element={<Messages />} />
+                  <Route path="settings" element={<Settings />} />
+                </Routes>
+              } />
 
-          {/* Profession-specific pages */}
-          <Route path="/patient" element={<PatientPage />} />
-          <Route path="/clinician" element={<ClinicianPage />} />
-          <Route path="/vendor" element={<VendorPage />} />
+              <Route path="/clinician/*" element={
+                <Routes>
+                  <Route path="dashboard" element={<ClinicianDashboard />} />
+                  <Route path="profile" element={<MyProfile />} />
+                  <Route path="messages" element={<Messages />} />
+                  <Route path="settings" element={<Settings />} />
+                </Routes>
+              } />
 
-          {/* Dashboards */}
-          <Route path="/patientdashboard" element={<PatientDashboard />} />
-          <Route path="/vendordashboard" element={<VendorDashboard />} />
-          <Route path="/cliniciandashboard" element={<ClinicianDashboard />} />
+              <Route path="/vendor/*" element={
+                <Routes>
+                  <Route path="dashboard" element={<VendorDashboard />} />
+                  <Route path="profile" element={<MyProfile />} />
+                  <Route path="messages" element={<Messages />} />
+                  <Route path="settings" element={<Settings />} />
+                </Routes>
+              } />
+            </Route>
 
-          {/* Shared dashboard pages with sidebar layout */}
-          <Route path="/profile" element={<MyProfile />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/settings" element={<Settings />} />
-
-          
-          {/* <Route path="/cart" element={<CartPage />} />  {/* Added CartPage route */}
-
-          {/* FAQ */}
-          <Route path="/faq" element={<FAQ />} />
-        </Routes>
-      </div>
+            {/* 404 Route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </Suspense>
     </Router>
   );
 }
