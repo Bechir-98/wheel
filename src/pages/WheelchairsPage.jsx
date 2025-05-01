@@ -252,13 +252,13 @@ const WheelchairsPage = () => {
     <Container className="py-5">
       <Alert variant="danger" className="shadow">
         <Alert.Heading className="d-flex align-items-center">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
+          <i className="bi bi-exclamation-triangle-fill me-2" />
           Error loading data
         </Alert.Heading>
         <p>{error}</p>
         <div className="d-flex gap-2">
           <Button variant="primary" onClick={() => window.location.reload()}>
-            <i className="bi bi-arrow-clockwise me-2"></i>Retry
+            <i className="bi bi-arrow-clockwise me-2" />Retry
           </Button>
           <Button variant="outline-secondary" onClick={() => setError(null)}>
             Dismiss
@@ -286,7 +286,7 @@ const WheelchairsPage = () => {
             className="w-100"
             onClick={() => setShowFiltersMobile(!showFiltersMobile)}
           >
-            <i className={`bi bi-funnel${showFiltersMobile ? '-fill' : ''} me-2`}></i>
+            <i className={`bi bi-funnel${showFiltersMobile ? '-fill' : ''} me-2`} />
             {showFiltersMobile ? 'Hide Filters' : 'Show Filters'}
           </Button>
         </Col>
@@ -298,7 +298,7 @@ const WheelchairsPage = () => {
           <Card className="shadow-sm sticky-top" style={{top: '20px'}}>
             <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
               <h5 className="mb-0">
-                <i className="bi bi-funnel me-2"></i>
+                <i className="bi bi-funnel me-2" />
                 Filters
               </h5>
               <Badge bg="light" text="dark" pill className="d-flex align-items-center">
@@ -310,7 +310,7 @@ const WheelchairsPage = () => {
                 <Form.Group className="mb-3">
                   <InputGroup>
                     <InputGroup.Text>
-                      <i className="bi bi-search"></i>
+                      <i className="bi bi-search" />
                     </InputGroup.Text>
                     <Form.Control
                       type="text"
@@ -407,7 +407,7 @@ const WheelchairsPage = () => {
                   className="w-100"
                   aria-label="Reset all filters"
                 >
-                  <i className="bi bi-arrow-counterclockwise me-2"></i>
+                  <i className="bi bi-arrow-counterclockwise me-2" />
                   Reset Filters
                 </Button>
               </Form>
@@ -446,7 +446,7 @@ const WheelchairsPage = () => {
             <div>
               <Dropdown onSelect={handleSortChange}>
                 <Dropdown.Toggle variant="outline-secondary" id="sort-dropdown" size="sm">
-                  <i className="bi bi-sort-down me-1"></i>
+                  <i className="bi bi-sort-down me-1" />
                   {sortOrder === "featured" && "Sort by: Featured"}
                   {sortOrder === "price-asc" && "Sort by: Price (Low to High)"}
                   {sortOrder === "price-desc" && "Sort by: Price (High to Low)"}
@@ -532,11 +532,11 @@ const WheelchairsPage = () => {
                         </Card.Title>
                         <div className="text-muted small">
                           <span className="d-inline-block me-2">
-                            <i className="bi bi-star-fill text-warning me-1"></i>
+                            <i className="bi bi-star-fill text-warning me-1" />
                             4.8
                           </span>
                           <span>
-                            <i className={`bi ${parseInt(wheelchair.QT_STOCK) > 0 ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-1`}></i>
+                            <i className={`bi ${parseInt(wheelchair.QT_STOCK) > 0 ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-1`} />
                             {parseInt(wheelchair.QT_STOCK) > 0 ? 'In Stock' : 'Out of Stock'}
                           </span>
                         </div>
@@ -560,7 +560,7 @@ const WheelchairsPage = () => {
                             disabled={parseInt(wheelchair.QT_STOCK) <= 0}
                             aria-label={`View details for ${wheelchair.NOM_TYPE}`}
                           >
-                            <i className="bi bi-eye-fill me-2"></i>
+                            <i className="bi bi-eye-fill me-2" />
                             View Details
                           </Button>
                           {parseInt(wheelchair.QT_STOCK) > 0 && (
@@ -569,7 +569,7 @@ const WheelchairsPage = () => {
                               onClick={(e) => handleAddToCart(wheelchair, e)}
                               aria-label={`Add ${wheelchair.NOM_TYPE} to cart`}
                             >
-                              <i className="bi bi-cart-plus me-2"></i>
+                              <i className="bi bi-cart-plus me-2" />
                               Add to Cart
                             </Button>
                           )}
@@ -584,7 +584,7 @@ const WheelchairsPage = () => {
             <Card className="text-center py-5 shadow-sm">
               <Card.Body>
                 <div className="mb-4">
-                  <i className="bi bi-search text-muted" style={{ fontSize: '3rem' }}></i>
+                  <i className="bi bi-search text-muted" style={{ fontSize: '3rem' }} />
                 </div>
                 <h5 className="text-muted mb-3">No matching wheelchairs found</h5>
                 <p className="text-muted mb-4">Try adjusting your filters or search term</p>
@@ -594,7 +594,7 @@ const WheelchairsPage = () => {
                   className="px-4"
                   aria-label="Reset all filters"
                 >
-                  <i className="bi bi-funnel me-2"></i>
+                  <i className="bi bi-funnel me-2" />
                   Reset All Filters
                 </Button>
               </Card.Body>
