@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { 
   FaCalendarAlt, 
   FaFileAlt, 
@@ -527,13 +528,13 @@ const PatientDashboard = () => {
         <Navigation>
           <NavList>
             {[
-              { icon: <FaChartLine />, label: 'Dashboard', active: true },
-              { icon: <FaCalendarAlt />, label: 'Consultations', active: false },
-              { icon: <FaWheelchair />, label: 'My Wheelchair', active: false },
-              { icon: <FaHeartbeat />, label: 'Health Records', active: false },
-              { icon: <FaClipboard />, label: 'Assessments', active: false },
-              { icon: <FaComment />, label: 'Messages', active: false },
-              { icon: <FaCog />, label: 'Settings', active: false }
+              { icon: <FaChartLine />, label: 'Dashboard', active: true, to: '/dashboard' },
+              { icon: <FaCalendarAlt />, label: 'Consultations', active: false, to: '/consultations' },
+              { icon: <FaWheelchair />, label: 'My Wheelchair', active: false, to: '/wheelchair' },
+              { icon: <FaHeartbeat />, label: 'Health Records', active: false, to: '/health-records' },
+              { icon: <FaClipboard />, label: 'Assessments', active: false, to: '/assessments' },
+              { icon: <FaComment />, label: 'Messages', active: false, to: '/messages' },
+              { icon: <FaCog />, label: 'Settings', active: false, to: '/settings' }
             ].map((item, index) => (
               <NavItem
                 key={index}
@@ -541,7 +542,7 @@ const PatientDashboard = () => {
                 variants={navItemVariants}
                 whileHover="hover"
               >
-                <NavLink href="#" active={item.active}>
+                <NavLink as={Link} to={item.to} active={item.active}>
                   {item.icon}
                   {item.label}
                 </NavLink>

@@ -358,7 +358,7 @@ const NavBar = () => {
               {[
                 { path: '/', name: 'Home' },
                 { path: '/wheelchairs', name: 'Wheelchairs' },
-                { path: '/pricing', name: 'Pricing' },
+                { path: '/faq', name: 'Faq' },
                 { path: '/about', name: 'About' }
               ].map((link, i) => (
                 <motion.div
