@@ -1,15 +1,14 @@
 import './styles/App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthProvider } from './context/AuthContext';
 import AppRoutes from './routes/AppRoutes';
-
-import Footer from './layouts/footer.jsx';
+import useAuth from '../../hooks/useAuth';
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <AppRoutes />
-      <Footer />
-    </>
+    </AuthProvider>
   );
 }
 
