@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { 
   Container, 
   Row, 
@@ -10,17 +10,19 @@ import {
   Alert,
   Placeholder,
   InputGroup,
-  Dropdown,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
+  Offcanvas
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
 // Import default images
 import standardWheelchair from '../assets/wheelchair-standard.jpg';
 import customWheelchair from '../assets/wheelchair-custom.jpg';
 import sportWheelchair from '../assets/wheelchair-sport.jpg';
 import defaultWheelchair from '../assets/brand.png';
+import Twheel from '../assets/Twheel.jpg';
 
 // Configuration
 const API_BASE_URL = "http://localhost/wheel_api/";
@@ -28,66 +30,74 @@ const API_BASE_URL = "http://localhost/wheel_api/";
 // Skeleton Loader Component
 const WheelchairSkeleton = () => (
   <Col xs={12} sm={6} lg={4} className="mb-4">
-    <Card className="h-100 shadow-sm">
-      <Placeholder as={Card.Img} variant="top" className="bg-light" style={{ height: '200px' }} />
-      <Card.Body className="d-flex flex-column">
+    <Card className="h-100 shadow border-0 rounded-3">
+      <div className="bg-light rounded-top" style={{ height: '200px' }} />
+      <Card.Body>
         <Placeholder as={Card.Title} animation="glow">
-          <Placeholder xs={8} />
+          <Placeholder xs={6} />
         </Placeholder>
-        <Placeholder as={Card.Text} animation="glow" className="mb-4">
+        <Placeholder as={Card.Text} animation="glow">
           <Placeholder xs={7} /> <Placeholder xs={4} />
         </Placeholder>
-        <div className="mt-auto">
-          <Placeholder.Button variant="primary" xs={12} className="mb-2" />
-          <Placeholder.Button variant="outline-primary" xs={12} />
-        </div>
+        <Placeholder.Button variant="primary" xs={12} className="mb-2" />
+        <Placeholder.Button variant="outline-primary" xs={12} />
       </Card.Body>
     </Card>
   </Col>
 );
 
 const WheelchairsPage = () => {
-  // State management
   const [filters, setFilters] = useState({
     type: "",
     inStockOnly: true,
     search: "",
     propulsion: "",
     showNewOnly: false,
-    minPrice: "",
-    maxPrice: ""
+    priceRange: [0, 5000],
+    morphology: "",
+    pathology: "",
+    component: "",
+    option: ""
   });
-  
+
   const [wheelchairs, setWheelchairs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sortOrder, setSortOrder] = useState("featured");
-  const [showFiltersMobile, setShowFiltersMobile] = useState(false);
-  
+  const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
 
-  // Helper function to get wheelchair image based on type
-  const getWheelchairImage = useCallback((typeName) => {
+  // Add these new state variables after the existing ones
+  const [morphologies, setMorphologies] = useState([]);
+  const [pathologies, setPathologies] = useState([]);
+  const [components, setComponents] = useState([]);
+  const [options, setOptions] = useState([]);
+
+  // Enhanced image handling with multiple fallbacks
+  const getWheelchairImage = (typeName) => {
     if (!typeName) return defaultWheelchair;
     
+    // Normalize the type name for comparison
     const normalizedType = typeName.trim().toLowerCase();
     
+    // Define image mappings (all lowercase for case-insensitive matching)
     const imageMap = {
-      'standard': standardWheelchair,
-      'sur mesure': customWheelchair,
-      'sportif': sportWheelchair,
+      'leger': standardWheelchair,
+      'haut de gamme': customWheelchair,
+      'actif': sportWheelchair,
+      'traditionnel':Twheel,
+      // Add more mappings as needed
       'pediatric': defaultWheelchair,
       'luxe': defaultWheelchair
     };
     
+    // Return matching image or default
     return imageMap[normalizedType] || defaultWheelchair;
-  }, []);
+  };
 
   // Fetch wheelchair data
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
         const response = await fetch(`${API_BASE_URL}getWheelchairs.php`);
         
         if (!response.ok) {
@@ -96,18 +106,15 @@ const WheelchairsPage = () => {
         
         const data = await response.json();
         
-        // Process and enhance the data
+        // Enhance data with additional fields
         const enhancedData = data.map(w => ({
           ...w,
-          isNew: w.NEW === true || w.ID_FAUTEUIL > 15,
+          isNew: w.ID_FAUTEUIL > 103,
           imageUrl: getWheelchairImage(w.NOM_TYPE),
-          OPTIONS: w.OPTIONS || '',
-          hasOptions: w.OPTIONS && w.OPTIONS.length > 0,
-          price: parseFloat(w.PRIX)
+          hasOptions: w.options && w.options.length > 0
         }));
         
         setWheelchairs(enhancedData);
-        setError(null);
       } catch (error) {
         let errorMessage = "Failed to load wheelchairs";
         if (error.message.includes('Failed to fetch')) {
@@ -122,9 +129,39 @@ const WheelchairsPage = () => {
     };
 
     fetchData();
-  }, [getWheelchairImage]);
+  }, []);
 
-  // Filter change handler
+  // Add this useEffect to fetch additional filter data
+  useEffect(() => {
+    const fetchFilterData = async () => {
+      try {
+        const [morphRes, pathRes, compRes, optRes] = await Promise.all([
+          fetch(`${API_BASE_URL}getMorphologies.php`),
+          fetch(`${API_BASE_URL}getPathologies.php`),
+          fetch(`${API_BASE_URL}getComponents.php`),
+          fetch(`${API_BASE_URL}getOptions.php`)
+        ]);
+
+        const [morphData, pathData, compData, optData] = await Promise.all([
+          morphRes.json(),
+          pathRes.json(),
+          compRes.json(),
+          optRes.json()
+        ]);
+
+        setMorphologies(morphData);
+        setPathologies(pathData);
+        setComponents(compData);
+        setOptions(optData);
+      } catch (error) {
+        console.error("Error fetching filter data:", error);
+      }
+    };
+
+    fetchFilterData();
+  }, []);
+
+  // Filter handlers
   const handleFilterChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFilters(prev => ({
@@ -133,7 +170,6 @@ const WheelchairsPage = () => {
     }));
   };
 
-  // Reset filters
   const resetFilters = () => {
     setFilters({
       type: "",
@@ -141,102 +177,58 @@ const WheelchairsPage = () => {
       search: "",
       propulsion: "",
       showNewOnly: false,
-      minPrice: "",
-      maxPrice: ""
+      priceRange: [0, 5000],
+      morphology: "",
+      pathology: "",
+      component: "",
+      option: ""
     });
-    setSortOrder("featured");
   };
 
-  // Sort change handler
-  const handleSortChange = (value) => {
-    setSortOrder(value);
-  };
-
-  // Filter and sort wheelchairs
-  const filteredAndSortedWheelchairs = useMemo(() => {
-    // First apply filters
-    let result = wheelchairs.filter(w => {
-      const matchesType = !filters.type || w.NOM_TYPE === filters.type;
-      const matchesStock = !filters.inStockOnly || parseInt(w.QT_STOCK) > 0;
-      const matchesSearch = !filters.search || 
-        w.NOM_TYPE.toLowerCase().includes(filters.search.toLowerCase()) ||
-        (w.OPTIONS && w.OPTIONS.toLowerCase().includes(filters.search.toLowerCase()));
-      const matchesPropulsion = !filters.propulsion || w.PROPULTION === filters.propulsion;
-      const matchesNew = !filters.showNewOnly || w.isNew;
-      
-      // Price filtering
-      const minPrice = filters.minPrice ? parseFloat(filters.minPrice) : 0;
-      const maxPrice = filters.maxPrice ? parseFloat(filters.maxPrice) : Infinity;
-      const matchesPrice = w.price >= minPrice && w.price <= maxPrice;
-
-      return matchesType && matchesStock && matchesSearch && matchesPropulsion && matchesNew && matchesPrice;
+  // Memoized filtered results
+  const filteredWheelchairs = useMemo(() => {
+    return wheelchairs.filter(w => {
+      return (
+        (!filters.type || w.NOM_TYPE === filters.type) &&
+        (!filters.inStockOnly || w.QT_STOCK > 0) &&
+        (!filters.search || w.NOM_TYPE.toLowerCase().includes(filters.search.toLowerCase())) &&
+        (!filters.propulsion || w.PROPULTION.toString() === filters.propulsion) &&
+        (!filters.showNewOnly || w.isNew) &&
+        (!filters.morphology || w.morphologies?.includes(filters.morphology)) &&
+        (!filters.pathology || w.pathologies?.includes(filters.pathology)) &&
+        (!filters.component || w.components?.includes(filters.component)) &&
+        (!filters.option || w.options?.includes(filters.option))
+      );
     });
+  }, [wheelchairs, filters]);
 
-    // Then apply sorting
-    if (sortOrder === "price-asc") {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === "price-desc") {
-      result.sort((a, b) => b.price - a.price);
-    } else if (sortOrder === "newest") {
-      result.sort((a, b) => b.ID_FAUTEUIL - a.ID_FAUTEUIL);
-    } else if (sortOrder === "stock") {
-      result.sort((a, b) => parseInt(b.QT_STOCK) - parseInt(a.QT_STOCK));
-    }
+  const uniqueTypes = [...new Set(wheelchairs.map(w => w.NOM_TYPE))];
 
-    return result;
-  }, [wheelchairs, filters, sortOrder]);
-
-  // Extract unique types for filter dropdown
-  const uniqueTypes = useMemo(() => {
-    return [...new Set(wheelchairs.map(w => w.NOM_TYPE))];
-  }, [wheelchairs]);
-
-  // Calculate price range
-  const priceRange = useMemo(() => {
-    if (!wheelchairs.length) return { min: 0, max: 5000 };
-    
-    return wheelchairs.reduce((acc, wheelchair) => {
-      const price = parseFloat(wheelchair.PRIX);
-      return {
-        min: Math.min(acc.min, price),
-        max: Math.max(acc.max, price)
-      };
-    }, { min: Infinity, max: 0 });
-  }, [wheelchairs]);
-
-  // View item handler
-  const handleViewItem = useCallback((id) => {
-    navigate(`/wheelchairs/${id}`);
-  }, [navigate]);
-
-  // Add to cart handler
-  const handleAddToCart = useCallback((wheelchair, e) => {
-    e.stopPropagation();
-    // Implement cart functionality here
-    console.log(`Added wheelchair ${wheelchair.ID_FAUTEUIL} to cart`);
-    // Here you would dispatch to a cart context or redux store
-  }, []);
-
-  // Loading state UI
+  // Loading state
   if (loading) return (
     <Container fluid className="py-5 bg-light">
+      <div className="text-center mb-5">
+        <h1 className="display-4 fw-bold text-primary">Wheelchair Catalog</h1>
+        <p className="lead">Loading our premium selection of mobility solutions...</p>
+        <div className="spinner-grow text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
       <Row>
-        <Col md={3} className="mb-4">
-          <Card className="shadow-sm">
-            <Card.Body>
-              <Placeholder as={Card.Title} animation="glow">
-                <Placeholder xs={6} />
-              </Placeholder>
-              <Placeholder as={Form} animation="glow">
-                {[...Array(5)].map((_, i) => (
-                  <Placeholder key={i} as={Form.Group} className="mb-3">
-                    <Placeholder as={Form.Label} xs={4} />
-                    <Placeholder as={Form.Control} xs={12} />
-                  </Placeholder>
-                ))}
-              </Placeholder>
-            </Card.Body>
-          </Card>
+        <Col md={3} className="mb-4 d-none d-md-block">
+          <div className="p-4 bg-white rounded-3 shadow">
+            <Placeholder as="h4" animation="glow">
+              <Placeholder xs={6} />
+            </Placeholder>
+            <Placeholder as={Form} animation="glow">
+              {[...Array(4)].map((_, i) => (
+                <Placeholder key={i} as={Form.Group} className="mb-3">
+                  <Placeholder as={Form.Label} xs={4} />
+                  <Placeholder as={Form.Control} xs={12} />
+                </Placeholder>
+              ))}
+            </Placeholder>
+          </div>
         </Col>
         <Col md={9}>
           <Row className="g-4">
@@ -247,20 +239,17 @@ const WheelchairsPage = () => {
     </Container>
   );
 
-  // Error state UI
+  // Error state
   if (error) return (
     <Container className="py-5">
-      <Alert variant="danger" className="shadow">
-        <Alert.Heading className="d-flex align-items-center">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>
-          Error loading data
-        </Alert.Heading>
+      <Alert variant="danger" className="shadow-sm rounded-3 border-0">
+        <Alert.Heading>Error loading data</Alert.Heading>
         <p>{error}</p>
         <div className="d-flex gap-2">
           <Button variant="primary" onClick={() => window.location.reload()}>
-            <i className="bi bi-arrow-clockwise me-2"></i>Retry
+            Retry
           </Button>
-          <Button variant="outline-secondary" onClick={() => setError(null)}>
+          <Button variant="secondary" onClick={() => setError(null)}>
             Dismiss
           </Button>
         </div>
@@ -270,307 +259,434 @@ const WheelchairsPage = () => {
 
   return (
     <Container fluid className="py-5 bg-light">
-      {/* Header */}
-      <Row className="mb-4">
-        <Col>
-          <h1 className="display-5 fw-bold text-primary">Our Wheelchair Collection</h1>
-          <p className="text-muted">Find the perfect wheelchair for your needs</p>
-        </Col>
-      </Row>
-      
-      {/* Mobile Filter Toggle Button - Only visible on small screens */}
-      <Row className="d-md-none mb-3">
-        <Col>
-          <Button 
-            variant="outline-primary" 
-            className="w-100"
-            onClick={() => setShowFiltersMobile(!showFiltersMobile)}
-          >
-            <i className={`bi bi-funnel${showFiltersMobile ? '-fill' : ''} me-2`}></i>
-            {showFiltersMobile ? 'Hide Filters' : 'Show Filters'}
-          </Button>
-        </Col>
-      </Row>
-      
+      {/* Header Section */}
+      <Container className="mb-5 text-center">
+        <h1 className="display-4 fw-bold text-primary mb-3">Wheelchair Catalog</h1>
+        <p className="lead mb-4">Browse our selection of high-quality mobility solutions</p>
+        
+        {/* Mobile Filter Toggle */}
+        <Button 
+          variant="primary" 
+          className="d-md-none mb-4 shadow"
+          onClick={() => setShowFilters(true)}
+        >
+          <i className="bi bi-funnel me-2"></i> Show Filters
+        </Button>
+        
+        {/* Summary Stats */}
+        <div className="d-flex justify-content-center gap-4 flex-wrap">
+          <Badge bg="light" text="dark" className="px-3 py-2 fs-6 shadow-sm">
+            <i className="bi bi-wheelchair me-2"></i>
+            {wheelchairs.length} Total Products
+          </Badge>
+          <Badge bg="light" text="dark" className="px-3 py-2 fs-6 shadow-sm">
+            <i className="bi bi-box-seam me-2"></i>
+            {wheelchairs.filter(w => w.QT_STOCK > 0).length} In Stock
+          </Badge>
+        </div>
+      </Container>
+
       <Row>
-        {/* Filter Sidebar */}
-        <Col md={3} className={`mb-4 ${showFiltersMobile ? 'd-block' : 'd-none d-md-block'}`}>
-          <Card className="shadow-sm sticky-top" style={{top: '20px'}}>
-            <Card.Header className="bg-primary text-white d-flex justify-content-between align-items-center">
-              <h5 className="mb-0">
-                <i className="bi bi-funnel me-2"></i>
-                Filters
-              </h5>
-              <Badge bg="light" text="dark" pill className="d-flex align-items-center">
-                {filteredAndSortedWheelchairs.length}
-              </Badge>
-            </Card.Header>
-            <Card.Body>
-              <Form>
-                <Form.Group className="mb-3">
-                  <InputGroup>
-                    <InputGroup.Text>
-                      <i className="bi bi-search"></i>
-                    </InputGroup.Text>
-                    <Form.Control
-                      type="text"
-                      name="search"
-                      value={filters.search}
-                      onChange={handleFilterChange}
-                      placeholder="Search wheelchairs..."
-                      aria-label="Search wheelchairs by name"
-                    />
-                  </InputGroup>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Wheelchair Type</Form.Label>
-                  <Form.Select
-                    name="type"
-                    value={filters.type}
+        {/* Filter Sidebar - Desktop */}
+        <Col md={3} className="mb-4 d-none d-md-block">
+          <div className="p-4 bg-white rounded-3 shadow sticky-top" style={{top: '20px'}}>
+            <h4 className="mb-4 text-primary border-bottom pb-2">
+              <i className="bi bi-funnel me-2"></i>
+              Filters
+            </h4>
+            <Form>
+              <Form.Group className="mb-4">
+                <InputGroup className="shadow-sm">
+                  <InputGroup.Text className="bg-white border-end-0">
+                    <i className="bi bi-search"></i>
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    name="search"
+                    value={filters.search}
                     onChange={handleFilterChange}
-                    aria-label="Filter by wheelchair type"
-                  >
-                    <option value="">All Types</option>
-                    {uniqueTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                    placeholder="Search by name"
+                    className="border-start-0"
+                    aria-label="Search wheelchairs by name"
+                  />
+                </InputGroup>
+              </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Propulsion</Form.Label>
-                  <Form.Select
-                    name="propulsion"
-                    value={filters.propulsion}
-                    onChange={handleFilterChange}
-                    aria-label="Filter by propulsion type"
-                  >
-                    <option value="">All Types</option>
-                    <option value="1">With Propulsion</option>
-                    <option value="0">Manual</option>
-                  </Form.Select>
-                </Form.Group>
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Wheelchair Type</Form.Label>
+                <Form.Select
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                  className="shadow-sm"
+                  aria-label="Filter by wheelchair type"
+                >
+                  <option value="">All Types</option>
+                  {uniqueTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Price Range</Form.Label>
-                  <Row>
-                    <Col>
-                      <Form.Control
-                        type="number"
-                        name="minPrice"
-                        value={filters.minPrice}
-                        onChange={handleFilterChange}
-                        placeholder="Min"
-                        min={priceRange.min}
-                        max={priceRange.max}
-                      />
-                    </Col>
-                    <Col xs="auto" className="d-flex align-items-center">-</Col>
-                    <Col>
-                      <Form.Control
-                        type="number"
-                        name="maxPrice"
-                        value={filters.maxPrice}
-                        onChange={handleFilterChange}
-                        placeholder="Max"
-                        min={priceRange.min}
-                        max={priceRange.max}
-                      />
-                    </Col>
-                  </Row>
-                </Form.Group>
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Morphology</Form.Label>
+                <Form.Select
+                  name="morphology"
+                  value={filters.morphology}
+                  onChange={handleFilterChange}
+                  className="shadow-sm"
+                  aria-label="Filter by morphology"
+                >
+                  <option value="">All Morphologies</option>
+                  {morphologies.map(morph => (
+                    <option key={morph.ID_MORPH} value={morph.ID_MORPH}>
+                      {morph.NOM_MORPH}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
 
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Pathology</Form.Label>
+                <Form.Select
+                  name="pathology"
+                  value={filters.pathology}
+                  onChange={handleFilterChange}
+                  className="shadow-sm"
+                  aria-label="Filter by pathology"
+                >
+                  <option value="">All Pathologies</option>
+                  {pathologies.map(path => (
+                    <option key={path.ID_PATHOLOGIE} value={path.ID_PATHOLOGIE}>
+                      {path.NOM_PAT}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Component</Form.Label>
+                <Form.Select
+                  name="component"
+                  value={filters.component}
+                  onChange={handleFilterChange}
+                  className="shadow-sm"
+                  aria-label="Filter by component"
+                >
+                  <option value="">All Components</option>
+                  {components.map(comp => (
+                    <option key={comp.ID_COMPOSANT} value={comp.ID_COMPOSANT}>
+                      {comp.NOM_COMP}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Options</Form.Label>
+                <Form.Select
+                  name="option"
+                  value={filters.option}
+                  onChange={handleFilterChange}
+                  className="shadow-sm"
+                  aria-label="Filter by options"
+                >
+                  <option value="">All Options</option>
+                  {options.map(opt => (
+                    <option key={opt.ID_OPTION} value={opt.ID_OPTION}>
+                      {opt.NOM_OPTION}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <div className="mb-4">
+                <Form.Label className="fw-semibold">Price Range</Form.Label>
+                <div className="d-flex align-items-center gap-2">
+                  <Form.Control
+                    type="number"
+                    value={filters.priceRange[0]}
+                    onChange={(e) => setFilters(prev => ({
+                      ...prev,
+                      priceRange: [parseInt(e.target.value), prev.priceRange[1]]
+                    }))}
+                    className="shadow-sm"
+                    placeholder="Min"
+                  />
+                  <span>-</span>
+                  <Form.Control
+                    type="number"
+                    value={filters.priceRange[1]}
+                    onChange={(e) => setFilters(prev => ({
+                      ...prev,
+                      priceRange: [prev.priceRange[0], parseInt(e.target.value)]
+                    }))}
+                    className="shadow-sm"
+                    placeholder="Max"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-4 d-flex flex-column gap-2">
                 <Form.Check
-                  type="checkbox"
+                  type="switch"
                   id="inStockOnly"
                   label="In Stock Only"
                   name="inStockOnly"
                   checked={filters.inStockOnly}
                   onChange={handleFilterChange}
-                  className="mb-3 fw-bold"
+                  className="fw-semibold"
                 />
 
                 <Form.Check
-                  type="checkbox"
+                  type="switch"
                   id="showNewOnly"
                   label="New Arrivals Only"
                   name="showNewOnly"
                   checked={filters.showNewOnly}
                   onChange={handleFilterChange}
-                  className="mb-3 fw-bold"
+                  className="fw-semibold"
                 />
 
+                <Form.Check
+                  type="switch"
+                  id="propulsion"
+                  label="With Propulsion"
+                  name="propulsion"
+                  checked={filters.propulsion === "true"}
+                  onChange={(e) => setFilters(prev => ({
+                    ...prev,
+                    propulsion: e.target.checked ? "true" : ""
+                  }))}
+                  className="fw-semibold"
+                />
+              </div>
+
+              <Button
+                variant="outline-primary"
+                onClick={resetFilters}
+                className="w-100 shadow-sm"
+                aria-label="Reset all filters"
+              >
+                <i className="bi bi-arrow-counterclockwise me-2"></i>
+                Reset All Filters
+              </Button>
+            </Form>
+          </div>
+        </Col>
+
+        {/* Mobile Filters Offcanvas */}
+        <Offcanvas show={showFilters} onHide={() => setShowFilters(false)} placement="start" className="w-75">
+          <Offcanvas.Header closeButton className="bg-primary text-white">
+            <Offcanvas.Title>Filter Options</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <Form>
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Search</Form.Label>
+                <InputGroup>
+                  <InputGroup.Text>
+                    <i className="bi bi-search"></i>
+                  </InputGroup.Text>
+                  <Form.Control
+                    type="text"
+                    name="search"
+                    value={filters.search}
+                    onChange={handleFilterChange}
+                    placeholder="Search by name"
+                    aria-label="Search wheelchairs by name"
+                  />
+                </InputGroup>
+              </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label className="fw-semibold">Wheelchair Type</Form.Label>
+                <Form.Select
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                  aria-label="Filter by wheelchair type"
+                >
+                  <option value="">All Types</option>
+                  {uniqueTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+
+              <div className="mb-4">
+                <Form.Check
+                  type="switch"
+                  id="mobileInStockOnly"
+                  label="In Stock Only"
+                  name="inStockOnly"
+                  checked={filters.inStockOnly}
+                  onChange={handleFilterChange}
+                  className="mb-2 fw-semibold"
+                />
+
+                <Form.Check
+                  type="switch"
+                  id="mobileShowNewOnly"
+                  label="New Arrivals Only"
+                  name="showNewOnly"
+                  checked={filters.showNewOnly}
+                  onChange={handleFilterChange}
+                  className="fw-semibold"
+                />
+              </div>
+
+              <div className="d-grid gap-2">
+                <Button
+                  variant="primary"
+                  onClick={() => setShowFilters(false)}
+                >
+                  Apply Filters
+                </Button>
                 <Button
                   variant="outline-secondary"
                   onClick={resetFilters}
-                  className="w-100"
-                  aria-label="Reset all filters"
                 >
-                  <i className="bi bi-arrow-counterclockwise me-2"></i>
-                  Reset Filters
+                  Reset All Filters
                 </Button>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
+              </div>
+            </Form>
+          </Offcanvas.Body>
+        </Offcanvas>
 
         {/* Wheelchair Listings */}
         <Col md={9}>
-          <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">
-            <div className="mb-2 mb-md-0">
-              <span className="badge bg-primary rounded-pill me-2">
-                {filteredAndSortedWheelchairs.length} {filteredAndSortedWheelchairs.length === 1 ? 'Item' : 'Items'}
-              </span>
-              {filters.showNewOnly && (
-                <span className="badge bg-danger rounded-pill me-2">
-                  New Arrivals
-                </span>
-              )}
-              {filters.inStockOnly && (
-                <span className="badge bg-success rounded-pill me-2">
-                  In Stock Only
-                </span>
-              )}
-              {filters.type && (
-                <span className="badge bg-info rounded-pill me-2">
-                  Type: {filters.type}
-                </span>
-              )}
-              {filters.search && (
-                <span className="badge bg-secondary rounded-pill me-2">
-                  Search: "{filters.search}"
-                </span>
-              )}
-            </div>
-            <div>
-              <Dropdown onSelect={handleSortChange}>
-                <Dropdown.Toggle variant="outline-secondary" id="sort-dropdown" size="sm">
-                  <i className="bi bi-sort-down me-1"></i>
-                  {sortOrder === "featured" && "Sort by: Featured"}
-                  {sortOrder === "price-asc" && "Sort by: Price (Low to High)"}
-                  {sortOrder === "price-desc" && "Sort by: Price (High to Low)"}
-                  {sortOrder === "newest" && "Sort by: Newest First"}
-                  {sortOrder === "stock" && "Sort by: Stock Available"}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item eventKey="featured">Featured</Dropdown.Item>
-                  <Dropdown.Item eventKey="price-asc">Price: Low to High</Dropdown.Item>
-                  <Dropdown.Item eventKey="price-desc">Price: High to Low</Dropdown.Item>
-                  <Dropdown.Item eventKey="newest">Newest First</Dropdown.Item>
-                  <Dropdown.Item eventKey="stock">Stock Available</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+          {/* Results Summary */}
+          <div className="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
+            <span className="fw-semibold">
+              {filteredWheelchairs.length} {filteredWheelchairs.length === 1 ? 'product' : 'products'} found
+            </span>
+            <div className="d-flex gap-1 align-items-center">
+              <span className="text-muted d-none d-sm-block">Sort by:</span>
+              <Form.Select size="sm" className="w-auto">
+                <option>Latest</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Most Popular</option>
+              </Form.Select>
             </div>
           </div>
 
-          {filteredAndSortedWheelchairs.length > 0 ? (
-            <Row className="g-4">
-              {filteredAndSortedWheelchairs.map(wheelchair => (
+          {/* Product Grid */}
+          <Row className="g-4">
+            {filteredWheelchairs.length > 0 ? (
+              filteredWheelchairs.map(wheelchair => (
                 <Col key={wheelchair.ID_FAUTEUIL} xs={12} sm={6} lg={4}>
-                  <Card 
-                    className="h-100 shadow-sm border-0 overflow-hidden transition-all hover-effect"
-                    onClick={() => handleViewItem(wheelchair.ID_FAUTEUIL)}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="position-relative bg-light" style={{ height: "220px", overflow: 'hidden' }}>
-                      <img
-                        src={wheelchair.imageUrl}
-                        alt={`${wheelchair.NOM_TYPE} wheelchair`}
-                        className="img-fluid h-100 w-100 object-fit-cover transition-all"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = defaultWheelchair;
-                        }}
-                        loading="lazy"
-                      />
+                  <Card className="h-100 w-100 shadow border-0 rounded-3 overflow-hidden transition-hover">
+                    {/* Wheelchair Image */}
+                    <div 
+                      className="position-relative" 
+                      style={{ height: "220px", overflow: 'hidden', cursor: 'pointer' }}
+                      onClick={() => navigate(`/wheelchairs/${wheelchair.ID_FAUTEUIL}`)}
+                    >
+                      <div className="hover-zoom h-100">
+                        <img
+                          src={wheelchair.imageUrl}
+                          alt={`${wheelchair.NOM_TYPE} wheelchair`}
+                          className="img-fluid h-100 w-100 object-fit-cover"
+                          onError={(e) => {
+                            e.target.onerror = null; // Prevent infinite loop
+                            e.target.src = defaultWheelchair;
+                          }}
+                          loading="lazy"
+                        />
+                      </div>
+                      
                       {/* Status Badges */}
-                      <div className="position-absolute top-0 start-0 p-2">
+                      <div className="position-absolute top-0 start-0 p-2 d-flex flex-column gap-1">
                         {wheelchair.isNew && (
-                          <Badge pill bg="danger" className="me-1">
-                            New
+                          <Badge 
+                            pill 
+                            bg="danger" 
+                            className="px-2 py-1"
+                            aria-label="New arrival"
+                          >
+                            <i className="bi bi-stars me-1"></i> New
                           </Badge>
                         )}
+                      </div>
+                      
+                      <div className="position-absolute top-0 end-0 p-2 d-flex flex-column gap-1">
                         {wheelchair.hasOptions && (
                           <OverlayTrigger
-                            placement="top"
-                            overlay={
-                              <Tooltip id={`tooltip-options-${wheelchair.ID_FAUTEUIL}`}>
-                                Options: {wheelchair.OPTIONS}
-                              </Tooltip>
-                            }
+                            placement="left"
+                            overlay={<Tooltip>Customization options available</Tooltip>}
                           >
-                            <Badge pill bg="success" className="me-1">
-                              Options
+                            <Badge 
+                              pill 
+                              bg="success" 
+                              className="px-2 py-1"
+                              aria-label="Has options"
+                            >
+                              <i className="bi bi-gear me-1"></i> Options
                             </Badge>
                           </OverlayTrigger>
                         )}
-                        {wheelchair.PROPULTION === "1" && (
-                          <Badge pill bg="info" className="me-1">
-                            ⚡ Powered
-                          </Badge>
-                        )}
                       </div>
-                      {parseInt(wheelchair.QT_STOCK) <= 3 && parseInt(wheelchair.QT_STOCK) > 0 && (
-                        <Badge pill bg="warning" text="dark" className="position-absolute bottom-0 end-0 m-2">
-                          Only {wheelchair.QT_STOCK} left
+                      
+                      {wheelchair.QT_STOCK <= 3 && wheelchair.QT_STOCK > 0 && (
+                        <Badge 
+                          pill 
+                          bg="warning" 
+                          text="dark"
+                          className="position-absolute bottom-0 end-0 m-2 px-2 py-1"
+                          aria-label="Low stock"
+                        >
+                          <i className="bi bi-exclamation-triangle me-1"></i> Low Stock
                         </Badge>
-                      )}
-                      {parseInt(wheelchair.QT_STOCK) === 0 && (
-                        <div className="position-absolute top-0 end-0 bottom-0 start-0 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center">
-                          <Badge pill bg="danger" className="fs-6 px-3 py-2">
-                            Out of Stock
-                          </Badge>
-                        </div>
                       )}
                     </div>
 
-                    <Card.Body className="d-flex flex-column">
-                      <div className="mb-2">
-                        <Card.Title className="d-flex justify-content-between align-items-start mb-1">
-                          <span className="text-truncate">{wheelchair.NOM_TYPE}</span>
-                        </Card.Title>
-                        <div className="text-muted small">
-                          <span className="d-inline-block me-2">
-                            <i className="bi bi-star-fill text-warning me-1"></i>
-                            4.8
-                          </span>
-                          <span>
-                            <i className={`bi ${parseInt(wheelchair.QT_STOCK) > 0 ? 'bi-check-circle-fill text-success' : 'bi-x-circle-fill text-danger'} me-1`}></i>
-                            {parseInt(wheelchair.QT_STOCK) > 0 ? 'In Stock' : 'Out of Stock'}
-                          </span>
-                        </div>
+                    <Card.Body className="d-flex flex-column p-4">
+                      <Card.Title 
+                        className="h5 mb-3"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => navigate(`/wheelchairs/${wheelchair.ID_FAUTEUIL}`)}
+                      >
+                        {wheelchair.NOM_TYPE}
+                      </Card.Title>
+                      
+                      <div className="mb-3">
+                        <span className="badge bg-light text-dark me-2">Type: {wheelchair.NOM_TYPE}</span>
                       </div>
                       
-                      <div className="mt-auto">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <span className="text-success fw-bold fs-5">
-                            ${parseFloat(wheelchair.PRIX).toFixed(2)}
+                      <div className="mt-auto "   >
+                        <div className="d-flex justify-content-between align-items-center mb-3  flex-column">
+                          <span className="text-success fw-bold fs-4">
+                            {Number(wheelchair.PRIX).toFixed(2)} DT  
                           </span>
-                          {parseInt(wheelchair.QT_STOCK) > 0 && (
-                            <small className="text-muted">
-                              {wheelchair.QT_STOCK} available
-                            </small>
-                          )}
+                          <br />  
+                          <span 
+                          
+                            className={`badge ${wheelchair.QT_STOCK > 0 ? "bg-success" : "bg-danger"}`}
+                            aria-label={`Stock status: ${wheelchair.QT_STOCK > 0 ? `${wheelchair.QT_STOCK} in stock` : 'Out of stock'}`}
+                          >
+                            {wheelchair.QT_STOCK > 0 ? `${wheelchair.QT_STOCK} in stock` : "Out of stock"}
+                          </span>
                         </div>
                         <div className="d-grid gap-2">
                           <Button 
                             variant="primary"
-                            onClick={() => handleViewItem(wheelchair.ID_FAUTEUIL)}
-                            disabled={parseInt(wheelchair.QT_STOCK) <= 0}
+                            size="lg"
+                            className="shadow-sm"
+                            onClick={() => navigate(`/wheelchairs/${wheelchair.ID_FAUTEUIL}`)}
+                            disabled={wheelchair.QT_STOCK <= 0}
                             aria-label={`View details for ${wheelchair.NOM_TYPE}`}
                           >
-                            <i className="bi bi-eye-fill me-2"></i>
-                            View Details
+                            <i className="bi bi-info-circle me-2"></i> View Details
                           </Button>
-                          {parseInt(wheelchair.QT_STOCK) > 0 && (
+                          {wheelchair.QT_STOCK > 0 && (
                             <Button 
                               variant="outline-primary"
-                              onClick={(e) => handleAddToCart(wheelchair, e)}
+                              className="shadow-sm"
                               aria-label={`Add ${wheelchair.NOM_TYPE} to cart`}
                             >
-                              <i className="bi bi-cart-plus me-2"></i>
-                              Add to Cart
+                              <i className="bi bi-cart-plus me-2"></i> Add to Cart
                             </Button>
                           )}
                         </div>
@@ -578,32 +694,78 @@ const WheelchairsPage = () => {
                     </Card.Body>
                   </Card>
                 </Col>
-              ))}
-            </Row>
-          ) : (
-            <Card className="text-center py-5 shadow-sm">
-              <Card.Body>
-                <div className="mb-4">
-                  <i className="bi bi-search text-muted" style={{ fontSize: '3rem' }}></i>
+              ))
+            ) : (
+              <Col className="text-center py-5">
+                <div className="p-5 bg-white rounded-3 shadow-sm">
+                  <i className="bi bi-search display-1 text-muted mb-3"></i>
+                  <h3 className="text-muted mb-3">No matching wheelchairs found</h3>
+                  <p className="text-muted mb-4">Try adjusting your filters to find what you're looking for</p>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={resetFilters}
+                    className="shadow"
+                    aria-label="Reset all filters"
+                  >
+                    <i className="bi bi-arrow-counterclockwise me-2"></i> Reset All Filters
+                  </Button>
                 </div>
-                <h5 className="text-muted mb-3">No matching wheelchairs found</h5>
-                <p className="text-muted mb-4">Try adjusting your filters or search term</p>
-                <Button
-                  variant="primary"
-                  onClick={resetFilters}
-                  className="px-4"
-                  aria-label="Reset all filters"
-                >
-                  <i className="bi bi-funnel me-2"></i>
-                  Reset All Filters
-                </Button>
-              </Card.Body>
-            </Card>
+              </Col>
+            )}
+          </Row>
+          
+          {/* Pagination */}
+          {filteredWheelchairs.length > 0 && (
+            <nav className="mt-5 d-flex justify-content-center">
+              <ul className="pagination pagination-lg">
+                <li className="page-item disabled">
+                  <a className="page-link" href="#" tabIndex="-1">Previous</a>
+                </li>
+                <li className="page-item active">
+                  <a className="page-link" href="#">1</a>
+                </li>
+                <li className="page-item">
+                  <a className="page-link" href="#">2</a>
+                </li>
+                <li className="page-item">
+                  <a className="page-link" href="#">3</a>
+                </li>
+                <li className="page-item">
+                  <a className="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
           )}
         </Col>
       </Row>
     </Container>
   );
+};
+
+// Add this to your CSS file
+`
+.transition-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.transition-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.hover-zoom {
+  transition: transform 0.5s ease;
+  overflow: hidden;
+}
+
+.hover-zoom:hover img {
+  transform: scale(1.05);
+}
+`
+
+WheelchairsPage.propTypes = {
+  // Add prop types if needed
 };
 
 export default WheelchairsPage;

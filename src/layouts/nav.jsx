@@ -92,7 +92,6 @@ function Navb() {
                 Sign in / Sign up
               </Nav.Link>
             </Nav>
-            <Link className="btn btn-outline-primary" to="/cart">🛒 Cart</Link>
 
           </Navbar.Collapse>
         </Container>
