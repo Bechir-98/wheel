@@ -32,7 +32,7 @@
 
 .settings-form button {
   margin-top: 1rem;
-  background: #0059ff;
+  background: #212529;
   color: white;
   padding: 0.6rem 1.2rem;
   border: none;
@@ -43,7 +43,7 @@
 .message-item {
   margin-bottom: 1rem;
   padding: 0.8rem;
-  border-left: 4px solid #0077cc;
+  border-left: 4px solid #212529;
   background: #eef6ff;
   border-radius: 6px;
 }

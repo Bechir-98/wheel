@@ -235,14 +235,14 @@ input, select {
 
 input:focus, select:focus {
   outline: none;
-  border-color: #007BFF;
+  border-color: #212529;
 }
 
 button {
   padding: 12px;
   font-size: 16px;
   color: #fff;
-  background-color: #007BFF;
+  background-color: #212529;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -250,7 +250,7 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #212529;
 }
 
 p {
@@ -599,7 +599,7 @@ button:hover {
   padding: 12px;
   font-size: 16px;
   color: #fff;
-  background-color: #007BFF;
+  background-color: #212529;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -608,7 +608,7 @@ button:hover {
 }
 
 .log-form button:hover {
-  background-color: #0056b3;
+  background-color: #212529;
 }
 
 .log-form p {
@@ -617,7 +617,7 @@ button:hover {
 }
 
 .log-form a {
-  color: #007BFF;
+  color: #212529;
   text-decoration: none;
 }
 
@@ -675,7 +675,7 @@ button:hover {
 
 .formm input:focus,
 .formm select:focus {
-  border-color: #007bff;
+  border-color: #212529;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
   outline: none;
 }
@@ -686,7 +686,7 @@ button:hover {
   padding: 14px;
   font-size: 16px;
   color: #fff;
-  background-color: #007bff;
+  background-color: #212529;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -695,7 +695,7 @@ button:hover {
 }
 
 .formm button:hover {
-  background-color: #0056b3;
+  background-color: #212529;
 }
 
 
